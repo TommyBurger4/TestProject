@@ -39,11 +39,10 @@ export default {
   },
   web: {
     bundler: 'metro',
-    output: 'static',
+    output: 'single',
     favicon: './assets/images/favicon.png'
   },
   plugins: [
-    'expo-router',
     'expo-localization',
     'expo-font',
     [
@@ -73,9 +72,6 @@ export default {
       }
     ]
   ],
-  experiments: {
-    typedRoutes: true
-  },
   extra: {
     EXPO_PUBLIC_FIREBASE_API_KEY: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
     EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,

@@ -6,15 +6,15 @@
  */
 
 export const lightColors = {
-  // Couleurs principales
-  primary: '#0066CC', // Bleu - Contraste 4.52:1 sur blanc
-  primaryDark: '#004C99',
-  primaryLight: '#3385D6',
+  // Couleurs principales (Bleu France)
+  primary: '#0055A4', // Bleu du drapeau francais - Contraste 5.32:1 sur blanc
+  primaryDark: '#003D7A',
+  primaryLight: '#3377B8',
 
-  // Couleurs secondaires
-  secondary: '#FF6B35', // Orange - Contraste 3.13:1 sur blanc
-  secondaryDark: '#E55A2B',
-  secondaryLight: '#FF8555',
+  // Couleurs secondaires (Rouge France)
+  secondary: '#EF4135', // Rouge du drapeau francais - Contraste 3.94:1 sur blanc
+  secondaryDark: '#C53529',
+  secondaryLight: '#F26659',
 
   // Couleurs de fond
   background: '#FFFFFF',
@@ -25,6 +25,10 @@ export const lightColors = {
   text: '#1A1A1A', // Contraste 16.1:1 sur blanc
   textSecondary: '#666666', // Contraste 5.74:1 sur blanc
   textDisabled: '#999999', // Contraste 2.85:1 sur blanc
+  textOnPrimary: '#FFFFFF', // Texte sur couleur primaire
+
+  // Etat desactive
+  disabled: '#CCCCCC',
 
   // Couleurs d'etat
   success: '#28A745', // Vert - Contraste 3.03:1 sur blanc
@@ -43,15 +47,15 @@ export const lightColors = {
 };
 
 export const darkColors = {
-  // Couleurs principales
-  primary: '#4D9FFF', // Bleu clair - Contraste 7.04:1 sur noir
-  primaryDark: '#3385D6',
-  primaryLight: '#66B3FF',
+  // Couleurs principales (Bleu France clair)
+  primary: '#5599D6', // Bleu France clair - Contraste 5.94:1 sur noir
+  primaryDark: '#3377B8',
+  primaryLight: '#77AADD',
 
-  // Couleurs secondaires
-  secondary: '#FF8C5A', // Orange clair - Contraste 5.45:1 sur noir
-  secondaryDark: '#FF6B35',
-  secondaryLight: '#FFAD85',
+  // Couleurs secondaires (Rouge France clair)
+  secondary: '#FF6B5E', // Rouge France clair - Contraste 5.21:1 sur noir
+  secondaryDark: '#F26659',
+  secondaryLight: '#FF8C82',
 
   // Couleurs de fond
   background: '#121212',
@@ -62,6 +66,10 @@ export const darkColors = {
   text: '#FFFFFF', // Contraste 21:1 sur noir
   textSecondary: '#B3B3B3', // Contraste 9.73:1 sur noir
   textDisabled: '#666666', // Contraste 4.62:1 sur noir
+  textOnPrimary: '#FFFFFF', // Texte sur couleur primaire
+
+  // Etat desactive
+  disabled: '#4D4D4D',
 
   // Couleurs d'etat
   success: '#4CAF50', // Vert clair - Contraste 4.96:1 sur noir
