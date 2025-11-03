@@ -66,7 +66,7 @@ export const Input: React.FC<InputProps> = ({
       {/* Label */}
       {label && (
         <Text
-          style={[styles.label, { color: error ? colors.error : colors.text }]}
+          style={[styles.label, { color: error ? colors.error : '#000000' }]}
           accessible={true}
           accessibilityRole="text"
         >
@@ -80,8 +80,7 @@ export const Input: React.FC<InputProps> = ({
           styles.input,
           {
             borderColor: getBorderColor(),
-            backgroundColor: disabled ? colors.disabled : colors.surface,
-            color: disabled ? colors.textSecondary : colors.text,
+            backgroundColor: disabled ? colors.disabled : '#FFFFFF',
             minHeight: Platform.select({
               ios: touchTargetSize.ios,
               android: touchTargetSize.android,
@@ -93,7 +92,7 @@ export const Input: React.FC<InputProps> = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={colors.textSecondary}
+        placeholderTextColor="#999999"
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
         editable={!disabled}
@@ -128,18 +127,20 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   label: {
-    fontSize: typography.fontSize.sm,
-    fontWeight: typography.fontWeight.medium,
+    fontSize: 14,
+    fontWeight: '500',
     marginBottom: spacing.xs,
-    lineHeight: typography.lineHeight.normal,
+    lineHeight: 21,
   },
   input: {
     borderWidth: 2,
     borderRadius: borderRadius.md,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    fontSize: typography.fontSize.base,
-    lineHeight: typography.lineHeight.normal,
+    paddingVertical: spacing.md,
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#000000',
+    textAlignVertical: 'center',
     // minHeight defini dynamiquement pour respecter touch targets
   },
   errorText: {

@@ -104,7 +104,7 @@ export const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return {
           ...baseTextStyle,
-          color: colors.textOnPrimary,
+          color: '#FFFFFF',
         };
       case 'outline':
       case 'text':
@@ -179,7 +179,9 @@ const styles = StyleSheet.create({
     // Touch target minimum respecte automatiquement via minHeight
   },
   baseText: {
+    fontSize: 16,
+    fontWeight: '600',
     textAlign: 'center',
-    lineHeight: typography.lineHeight.tight,
+    lineHeight: 19,
   },
 });
