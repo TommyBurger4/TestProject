@@ -1,6 +1,6 @@
 # 💻 CONVENTIONS DE CODE
 
-> **Guide complet des conventions de code pour React Native/Expo**
+> **Guide complet des conventions de code pour Next.js**
 
 ---
 
@@ -37,9 +37,9 @@ const hasPermission = (user: User, permission: string): boolean => {};
 const canEdit = (user: User, document: Document): boolean => {};
 
 // Handlers d'evenements : handle*
-const handlePress = () => {};
+const handleClick = () => {};
 const handleSubmit = async () => {};
-const handleInputChange = (text: string) => {};
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
 ```
 
 ### Composants React
@@ -47,7 +47,7 @@ const handleInputChange = (text: string) => {};
 ```typescript
 // Composants : PascalCase
 export const UserProfile: React.FC<Props> = () => {};
-export const LoginScreen: React.FC = () => {};
+export const LoginPage: React.FC = () => {};
 export const CustomButton: React.FC<ButtonProps> = () => {};
 
 // Composants HOC : with* prefix
@@ -85,11 +85,13 @@ type ApiResponse<T> = {
 // Props de composants : NomComposant + Props
 interface ButtonProps {
   title: string;
-  onPress: () => void;
+  onClick: () => void;
 }
 
-interface UserProfileScreenProps {
-  userId: string;
+interface UserProfilePageProps {
+  params: {
+    userId: string;
+  };
 }
 ```
 
@@ -99,7 +101,13 @@ interface UserProfileScreenProps {
 // Composants : PascalCase.tsx
 Button.tsx
 UserProfile.tsx
-LoginScreen.tsx
+LoginPage.tsx
+
+// Pages Next.js : page.tsx, layout.tsx, loading.tsx, error.tsx
+app/login/page.tsx
+app/dashboard/layout.tsx
+app/profile/loading.tsx
+app/error.tsx
 
 // Services : camelCase.ts
 authService.ts
@@ -110,7 +118,7 @@ firebaseService.ts
 useAuth.ts
 useDebounce.ts
 
-// Utils : camelCase.ts
+// Lib/Utils : camelCase.ts
 validators.ts
 formatters.ts
 dateUtils.ts
@@ -118,7 +126,6 @@ dateUtils.ts
 // Types : camelCase.types.ts
 user.types.ts
 api.types.ts
-navigation.types.ts
 
 // Constantes : camelCase.ts ou constants.ts
 colors.ts
@@ -259,7 +266,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 /**
  * Vérifie si l'utilisateur est authentifié
  *
- * Cette fonction récupère le token depuis AsyncStorage
+ * Cette fonction récupère le token depuis localStorage
  * et vérifie qu'il n'est pas expiré.
  *
  * @param userId - Identifiant unique de l'utilisateur
@@ -268,7 +275,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
  */
 export const isAuthenticated = async (userId: string): Promise<boolean> => {
   try {
-    // Récupérer le token depuis AsyncStorage
+    // Récupérer le token depuis localStorage
     const token = await getToken();
 
     // Vérifier que le token n'est pas expiré
@@ -303,7 +310,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 /**
  * Verifie si l'utilisateur est authentifie
  *
- * Cette fonction recupere le token depuis AsyncStorage
+ * Cette fonction recupere le token depuis localStorage
  * et verifie qu'il n'est pas expire.
  *
  * @param userId - Identifiant unique de l'utilisateur
@@ -312,7 +319,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
  */
 export const isAuthenticated = async (userId: string): Promise<boolean> => {
   try {
-    // Recuperer le token depuis AsyncStorage
+    // Recuperer le token depuis localStorage
     const token = await getToken();
 
     // Verifier que le token n'est pas expire
@@ -356,11 +363,10 @@ export const isAuthenticated = async (userId: string): Promise<boolean> => {
 - ❌ débogage → ✅ debogage
 
 **Navigation / UI :**
-- ❌ écran → ✅ ecran
-- ❌ appuyé → ✅ appuye
 - ❌ cliqué → ✅ clique
 - ❌ sélectionné → ✅ selectionne
 - ❌ désactivé → ✅ desactive
+- ❌ écran → ✅ ecran (ou "page" pour Next.js)
 
 **Dates / Temps :**
 - ❌ créé le → ✅ cree le
@@ -385,19 +391,21 @@ export const isAuthenticated = async (userId: string): Promise<boolean> => {
 **Ordre STRICT des imports (ESLint doit le forcer) :**
 
 ```typescript
-// 1. Imports React et React Native
+// 1. Imports React et Next.js
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter, usePathname } from 'next/navigation';
 
 // 2. Librairies externes (node_modules)
-import { useNavigation } from '@react-navigation/native';
 import { collection, getDocs } from 'firebase/firestore';
+import { toast } from 'sonner';
+import { clsx } from 'clsx';
 
 // 3. Imports absolus du projet (alias @)
-import { Button } from '@components/ui/Button';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import { colors } from '@theme/colors';
-import { spacing } from '@theme/spacing';
+import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { cn } from '@/lib/utils';
 
 // 4. Imports relatifs (meme feature)
 import { ProfileHeader } from '../components/ProfileHeader';
@@ -405,7 +413,7 @@ import { useProfile } from '../hooks/useProfile';
 import { Profile } from '../types/profile.types';
 
 // 5. Imports de types uniquement (si necessaire de les separer)
-import type { NavigationProp } from '@react-navigation/native';
+import type { Metadata } from 'next';
 ```
 
 ---
@@ -454,6 +462,8 @@ export const createProfile = async (
 **Dans les composants :**
 
 ```typescript
+'use client';
+
 const MyComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -466,24 +476,24 @@ const MyComponent: React.FC = () => {
       await someAsyncOperation();
 
       // Succes : feedback utilisateur
-      Alert.alert('Succes', 'Operation reussie !');
+      toast.success('Operation reussie !');
     } catch (err) {
       // Erreur : afficher message user-friendly
       const message = err instanceof Error ? err.message : 'Une erreur est survenue';
       setError(message);
-
-      // Optionnel : Alert pour erreurs critiques
-      // Alert.alert('Erreur', message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View>
-      {error && <Text style={styles.error}>{error}</Text>}
-      <Button title="Submit" onPress={handleSubmit} loading={loading} />
-    </View>
+    <div>
+      {error && <p className="text-red-600">{error}</p>}
+      <Button onClick={handleSubmit} loading={loading}>
+        Submit
+      </Button>
+    </div>
   );
 };
 ```
@@ -532,6 +542,74 @@ const isUser = (obj: unknown): obj is User => {
     'email' in obj
   );
 };
+```
+
+---
+
+## 🎨 Conventions Next.js Specifiques
+
+### Server Components vs Client Components
+
+```typescript
+// Server Component (par defaut)
+// Pas de 'use client' directive
+// Peut faire des appels DB directs
+
+export default async function ProfilePage({ params }: { params: { id: string } }) {
+  const profile = await getProfile(params.id); // Appel serveur direct
+  
+  return <div>{profile.name}</div>;
+}
+
+// Client Component
+// Directive 'use client' obligatoire si utilise hooks, event handlers, etc.
+
+'use client';
+
+import { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+### Route Handlers (API Routes)
+
+```typescript
+// app/api/users/route.ts
+
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  try {
+    const users = await fetchUsers();
+    return NextResponse.json(users);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const user = await createUser(body);
+    return NextResponse.json(user, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to create user' },
+      { status: 500 }
+    );
+  }
+}
 ```
 
 ---

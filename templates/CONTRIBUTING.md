@@ -120,8 +120,8 @@ Refs: #42
 ```bash
 fix(navigation): corriger le crash au retour arrière
 
-Le bouton retour provoquait un crash sur iOS.
-Ajout d'une vérification de navigation stack.
+Le bouton retour provoquait un crash sur Safari.
+Ajout d'une vérification de navigation history.
 
 Fixes: #156
 ```
@@ -264,7 +264,7 @@ git checkout -b feature/mon-feature
 
 # Tester localement
 npm test
-npm start
+npm run dev
 
 # Commiter régulièrement
 git add .

@@ -9,19 +9,8 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [Non publie]
 
-### Ajoute
-- Composants UI accessibles WCAG 2.1 AA (Button, Input, Card)
-- ThemeContext pour gestion theme clair/sombre
-- Theme couleurs drapeau francais (Bleu #0055A4, Rouge #EF4135)
-- Authentification complete Email/Password :
-  - authService.ts (register, login, logout, resetPassword)
-  - AuthContext avec onAuthStateChanged
-  - LoginScreen, RegisterScreen, ForgotPasswordScreen
-  - Validation formulaires et traduction erreurs francais
-
 ### En cours
-- Configuration tests Jest
-- Google Sign-In et Apple Sign-In (a venir)
+- Initialisation du projet en cours...
 
 ---
 
@@ -33,35 +22,13 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 - Configuration initiale du projet
 - Onboarding complet (16 questions)
 - Configuration Firebase Console
-  - Authentication (Email/Password active)
+  - Authentication (Email/Password activé)
   - Firestore Database (mode test, region europe-west1)
-  - Firebase Analytics active
-- Initialisation projet Expo avec TypeScript
-- Structure complete features/ (auth, clubs, search, chat, profile, favorites, notifications)
-- Configuration Firebase complete (firebase.ts avec .env)
-- Theme WCAG 2.1 AA complet :
-  - colors.ts avec contraste valide (4.5:1 texte, 3:1 UI)
-  - typography.ts avec tailles accessibles (16px minimum)
-  - spacing.ts avec touch targets (44x44 iOS, 48x48 Android)
-- Internationalisation (i18n-js) francais + anglais
-- Navigation React Navigation v7 installee
-- Firestore Rules generees (5 collections : users, clubs, conversations/messages, favorites, searches)
-- Documents legaux complets (CGU.md, POLITIQUE_CONFIDENTIALITE.md)
-- Setup Git avec SSH et push vers GitHub
-- Guide TROUBLESHOOTING.md (8 erreurs communes documentees)
-- Guide universel 18_TROUBLESHOOTING.md pour futurs projets
+  - Firebase Analytics
 - Definition architecture technique
 - Definition patterns Firestore Rules
 - Generation TodoList complete (78 taches)
-- Progression Phase 1 : 7/12 completees (58%)
-
-#### Corrige
-- Erreur expo-router avec React Navigation (retrait du plugin)
-- Erreur web.output 'static' incompatible (change a 'single')
-- Erreur react-native-reanimated/worklets (desinstalle temporairement)
-- Erreur assets manquants (reorganisation vers assets/images/ et assets/sounds/)
-- Erreur babel.config.js cree par erreur (supprime, Expo gere automatiquement)
-- Installation dependances avec --legacy-peer-deps pour eviter conflits
+- Documents legaux prepares (Topal, Strasbourg)
 
 #### Configuration
 - **Plateformes :** iOS + Android + Web (React Native Web)
@@ -99,4 +66,4 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 
 🤖 _Genere avec [Claude Code](https://claude.com/claude-code)_
 
-**Derniere mise a jour :** 03/11/2025 11:50
+**Derniere mise a jour :** 03/11/2025

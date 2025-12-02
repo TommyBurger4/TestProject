@@ -1,4 +1,4 @@
-# 🔄 GUIDE MISES A JOUR INCREMENTALES
+# 🔄 GUIDE MISES A JOUR INCREMENTALES (NEXT.JS)
 
 **IMPORTANT :** Pendant l'onboarding, mettre a jour les fichiers `.md` **immediatement** apres chaque reponse, plutot que d'attendre la fin.
 
@@ -48,14 +48,14 @@ Question 16 → Mettre a jour PROJECT.md immediatement
 
 **Public cible :** [PUBLIC_CIBLE]
 
-**Plateformes :** [A completer selon Q4bis]
+**Plateformes :** Site Web (responsive desktop + mobile)
 
 **Technologies principales :**
-- React Native + Expo v[VERSION_EXPO_ACTUELLE]
+- Next.js 14+ (App Router)
 - Firebase (details a venir)
 - TypeScript
+- Tailwind CSS
 - Zustand (state management)
-- React Navigation v7
 
 ---
 
@@ -99,7 +99,7 @@ _Aucun probleme connu pour le moment_
 
 #### 2. README.md (creation initiale)
 ```markdown
-# 📱 [NOM_PROJET]
+# 🌐 [NOM_PROJET]
 
 > [DESCRIPTION_1_PHRASE]
 
@@ -111,9 +111,10 @@ _Aucun probleme connu pour le moment_
 
 ## 🏗️ Technologies
 
-- React Native + Expo
+- Next.js 14+ (App Router)
 - TypeScript
 - Firebase
+- Tailwind CSS
 
 _(Plus de details a venir)_
 
@@ -193,20 +194,20 @@ Ajouter dans la section `## 📝 REPONSES ONBOARDING` :
 
 ---
 
-### Question 4bis : Plateforme Cible
+### Question 4bis : Priorite Desktop vs Mobile
 **Mettre a jour : PROJECT.md**
 
 Modifier dans la section `## 🎯 RESUME DU PROJET` :
 ```markdown
-**Plateformes :** iOS, Android[, Web] (selon reponse)
+**Plateformes :** Site Web responsive (Desktop + Mobile)
 ```
 
 Et ajouter dans `## 📝 REPONSES ONBOARDING` :
 ```markdown
-### Plateforme Cible
-- **Plateformes :** [iOS | Android | iOS + Android | iOS + Android + Web]
-- **Priorite :** [Mobile-first | Traitement egal mobile/web]
-- **Version Web :** [Complete | Limitee (consultation)]
+### Priorite Responsive
+- **Priorite :** [Desktop-first | Mobile-first | Traitement egal]
+- **Breakpoints cibles :** Desktop (1024px+), Tablet (768px), Mobile (320px)
+- **Features specifiques mobile :** [PWA, notifications push, geolocation, etc.]
 ```
 
 ---
@@ -380,18 +381,18 @@ Ajouter dans `## 📝 REPONSES ONBOARDING` :
 
 ---
 
-### Question 16 : Permissions Speciales
+### Question 16 : Permissions Web API
 **Mettre a jour : PROJECT.md**
 
 Ajouter dans `## 📝 REPONSES ONBOARDING` :
 ```markdown
-### Permissions
-- [✅ Camera (photos/videos)]
-- [✅ Galerie photos]
-- [✅ Contacts]
-- [✅ Calendrier natif]
-- [✅ Microphone]
-- [✅ Bluetooth]
+### Permissions Web API
+- [✅ Camera / Microphone (getUserMedia API)]
+- [✅ Upload fichiers (File API)]
+- [✅ Geolocalisation (Geolocation API)]
+- [✅ Notifications push (Push API)]
+- [✅ Clipboard (Clipboard API)]
+- [✅ Installation PWA (beforeinstallprompt)]
 ```
 
 ---
@@ -415,44 +416,45 @@ _Aucune tache en cours_
 ### ⬜ A FAIRE ([TOTAL_TACHES])
 
 #### 🚀 PHASE 1 : INITIALISATION (0/10) ⬜
-- [ ] [FEATURE] Creer structure dossiers | Added: [DATE]
-- [ ] [FEATURE] Installer dependances | Added: [DATE]
-- [ ] [FEATURE] Configurer Firebase | Added: [DATE]
+- [ ] [FEATURE] Creer structure dossiers Next.js (app/, components/, services/) | Added: [DATE]
+- [ ] [FEATURE] Installer dependances (Next.js, Tailwind, Firebase, etc.) | Added: [DATE]
+- [ ] [FEATURE] Configurer Firebase (Web SDK) | Added: [DATE]
 - [ ] [FEATURE] Setup Git et premier commit | Added: [DATE]
-- [ ] [FEATURE] Creer theme (colors, typography, spacing) | Added: [DATE]
-- [ ] [FEATURE] Setup i18n (fr, en) | Added: [DATE]
-- [ ] [FEATURE] Configurer navigation | Added: [DATE]
+- [ ] [FEATURE] Creer theme Tailwind (colors, typography, spacing) | Added: [DATE]
+- [ ] [FEATURE] Setup i18n next-intl (fr, en) | Added: [DATE]
+- [ ] [FEATURE] Configurer routing Next.js App Router | Added: [DATE]
 - [ ] [FEATURE] Creer composants UI de base (Button, Input, Card) | Added: [DATE]
-- [ ] [FEATURE] Setup tests (Jest config) | Added: [DATE]
+- [ ] [FEATURE] Setup tests (Jest + Playwright config) | Added: [DATE]
 - [ ] [DOCS] Creer README.md | Added: [DATE]
 
 #### 🔐 PHASE 2 : AUTHENTIFICATION (0/X) ⬜
 [SI AUTHENTIFICATION ACTIVEE]
 - [ ] [FEATURE] Creer AuthContext | Added: [DATE]
-- [ ] [FEATURE] Creer authService.ts | Added: [DATE]
-- [ ] [FEATURE] Ecran Login | Added: [DATE]
-- [ ] [FEATURE] Ecran Register | Added: [DATE]
+- [ ] [FEATURE] Creer authService.ts (Firebase Auth Web SDK) | Added: [DATE]
+- [ ] [FEATURE] Page Login (/login) | Added: [DATE]
+- [ ] [FEATURE] Page Register (/register) | Added: [DATE]
 [SI GOOGLE SIGN-IN]
-- [ ] [FEATURE] Configurer Google Sign-In | Added: [DATE]
+- [ ] [FEATURE] Configurer Google Sign-In (Web) | Added: [DATE]
 [SI APPLE SIGN-IN]
-- [ ] [FEATURE] Configurer Apple Sign-In | Added: [DATE]
+- [ ] [FEATURE] Configurer Apple Sign-In (Web) | Added: [DATE]
 
 #### 📸 PHASE 3 : STOCKAGE FICHIERS (0/X) ⬜
 [SI STOCKAGE ACTIVE]
 - [ ] [FEATURE] Setup Firebase Storage | Added: [DATE]
 - [ ] [FEATURE] Creer uploadService.ts | Added: [DATE]
-- [ ] [FEATURE] Composant ImagePicker | Added: [DATE]
+- [ ] [FEATURE] Composant FileUpload (input type file) | Added: [DATE]
+- [ ] [FEATURE] Composant ImageUpload avec preview | Added: [DATE]
 [SI VIDEOS]
-- [ ] [FEATURE] Composant VideoPicker | Added: [DATE]
-- [ ] [FEATURE] Compression videos | Added: [DATE]
+- [ ] [FEATURE] Composant VideoUpload | Added: [DATE]
+- [ ] [FEATURE] Compression videos cote client | Added: [DATE]
 
 #### 🗺️ PHASE 4 : GEOLOCALISATION (0/X) ⬜
 [SI GEOLOCALISATION ACTIVEE]
-- [ ] [FEATURE] Setup expo-location | Added: [DATE]
+- [ ] [FEATURE] Setup Geolocation API (navigator.geolocation) | Added: [DATE]
 - [ ] [FEATURE] Creer locationService.ts | Added: [DATE]
-- [ ] [FEATURE] Composant MapView | Added: [DATE]
-[SI TRACKING ARRIERE-PLAN]
-- [ ] [FEATURE] Setup tracking arriere-plan | Added: [DATE]
+- [ ] [FEATURE] Integration Google Maps JavaScript API | Added: [DATE]
+[SI TRACKING]
+- [ ] [FEATURE] Tracking position utilisateur (watchPosition) | Added: [DATE]
 
 #### 🔍 PHASE 5 : RECHERCHE (0/X) ⬜
 [SI RECHERCHE ACTIVEE]
@@ -465,29 +467,29 @@ _Aucune tache en cours_
 
 #### 🔔 PHASE 6 : NOTIFICATIONS (0/X) ⬜
 [SI NOTIFICATIONS ACTIVEES]
-- [ ] [FEATURE] Setup Expo Notifications | Added: [DATE]
+- [ ] [FEATURE] Setup Web Push API | Added: [DATE]
 - [ ] [FEATURE] Creer notificationService.ts | Added: [DATE]
-- [ ] [FEATURE] Gestion permissions | Added: [DATE]
+- [ ] [FEATURE] Demander permission notifications navigateur | Added: [DATE]
 - [ ] [FEATURE] Cloud Function onUserCreated (email bienvenue) | Added: [DATE]
 
 #### 💬 PHASE 7 : CHAT (0/X) ⬜
 [SI CHAT ACTIVE]
 - [ ] [FEATURE] Collection messages Firestore | Added: [DATE]
-- [ ] [FEATURE] Creer chatService.ts | Added: [DATE]
-- [ ] [FEATURE] Ecran ChatList | Added: [DATE]
-- [ ] [FEATURE] Ecran ChatRoom | Added: [DATE]
+- [ ] [FEATURE] Creer chatService.ts (realtime listeners) | Added: [DATE]
+- [ ] [FEATURE] Page ChatList (/chat) | Added: [DATE]
+- [ ] [FEATURE] Page ChatRoom (/chat/[id]) | Added: [DATE]
 [SI MEDIAS CHAT]
 - [ ] [FEATURE] Envoi photos dans chat | Added: [DATE]
 - [ ] [FEATURE] Envoi videos dans chat | Added: [DATE]
 
 #### 📅 PHASE 8 : CALENDRIER (0/X) ⬜
 [SI CALENDRIER ACTIF]
-- [ ] [FEATURE] Setup react-native-calendars | Added: [DATE]
+- [ ] [FEATURE] Setup react-calendar ou FullCalendar | Added: [DATE]
 - [ ] [FEATURE] Collection events Firestore | Added: [DATE]
 - [ ] [FEATURE] Creer eventService.ts | Added: [DATE]
-- [ ] [FEATURE] Ecran Calendrier | Added: [DATE]
-[SI INTEGRATION NATIVE]
-- [ ] [FEATURE] Integration calendrier natif (expo-calendar) | Added: [DATE]
+- [ ] [FEATURE] Page Calendrier (/calendar) | Added: [DATE]
+[SI INTEGRATION CALENDRIER]
+- [ ] [FEATURE] Export iCal (.ics) pour import dans Google Calendar / Outlook | Added: [DATE]
 
 #### 💳 PHASE 9 : MONETISATION (0/X) ⬜
 [SI ABONNEMENT OU ACHATS]
@@ -502,12 +504,13 @@ _Aucune tache en cours_
 - [ ] [FEATURE] Creer analyticsService.ts | Added: [DATE]
 - [ ] [FEATURE] Tracker evenements cles | Added: [DATE]
 
-#### 📴 PHASE 11 : MODE OFFLINE (0/X) ⬜
+#### 📴 PHASE 11 : MODE OFFLINE (PWA) (0/X) ⬜
 [SI MODE OFFLINE ACTIF]
-- [ ] [FEATURE] Setup AsyncStorage | Added: [DATE]
-- [ ] [FEATURE] Creer offlineService.ts | Added: [DATE]
-- [ ] [FEATURE] Detecter connexion (NetInfo) | Added: [DATE]
+- [ ] [FEATURE] Setup Service Workers | Added: [DATE]
+- [ ] [FEATURE] Creer offlineService.ts (cache strategies) | Added: [DATE]
+- [ ] [FEATURE] Detecter connexion (navigator.onLine) | Added: [DATE]
 - [ ] [FEATURE] Sync automatique au retour en ligne | Added: [DATE]
+- [ ] [FEATURE] Manifest PWA pour installation | Added: [DATE]
 
 #### ⚡ PHASE 12 : CLOUD FUNCTIONS (0/X) ⬜
 [SI CLOUD FUNCTIONS ACTIVEES]
@@ -515,9 +518,9 @@ _Aucune tache en cours_
 - [ ] [BACKEND] Cloud Function: [NOM_FUNCTION] | Added: [DATE]
 
 #### 🌍 PHASE 13 : INTERNATIONALISATION (0/3) ⬜
-- [ ] [FEATURE] Setup i18n | Added: [DATE]
+- [ ] [FEATURE] Setup next-intl | Added: [DATE]
 - [ ] [FEATURE] Fichiers traduction (fr, en[, AUTRES]) | Added: [DATE]
-- [ ] [FEATURE] Detecteur langue automatique | Added: [DATE]
+- [ ] [FEATURE] Detecteur langue automatique (navigator.language) | Added: [DATE]
 
 #### ♿ PHASE 14 : ACCESSIBILITE (0/X) ⬜
 [SI WCAG 2.1 AA/AAA]
@@ -544,16 +547,18 @@ _Aucune tache en cours_
 - [ ] [DOCS] Generer Politique Confidentialite | Added: [DATE]
 
 #### 🧪 PHASE 17 : TESTS (0/X) ⬜
-- [ ] [TEST] Tests unitaires services | Added: [DATE]
-- [ ] [TEST] Tests integration | Added: [DATE]
-- [ ] [TEST] Tests E2E (Detox) | Added: [DATE]
+- [ ] [TEST] Tests unitaires services (Jest) | Added: [DATE]
+- [ ] [TEST] Tests composants (React Testing Library) | Added: [DATE]
+- [ ] [TEST] Tests E2E (Playwright) | Added: [DATE]
+- [ ] [TEST] Tests accessibilite (axe-core) | Added: [DATE]
 
 #### 🚀 PHASE 18 : DEPLOIEMENT (0/X) ⬜
-- [ ] [DEPLOY] Setup EAS Build | Added: [DATE]
-- [ ] [DEPLOY] Build iOS | Added: [DATE]
-- [ ] [DEPLOY] Build Android | Added: [DATE]
-- [ ] [DEPLOY] TestFlight (iOS) | Added: [DATE]
-- [ ] [DEPLOY] Internal Testing (Android) | Added: [DATE]
+- [ ] [DEPLOY] Configurer Vercel | Added: [DATE]
+- [ ] [DEPLOY] Connecter repository GitHub a Vercel | Added: [DATE]
+- [ ] [DEPLOY] Configurer variables environnement Vercel | Added: [DATE]
+- [ ] [DEPLOY] Deploy preview (branche develop) | Added: [DATE]
+- [ ] [DEPLOY] Deploy production (branche main) | Added: [DATE]
+- [ ] [DEPLOY] Configurer domaine custom (optionnel) | Added: [DATE]
 
 ### ✅ TERMINE (0)
 _Aucune tache terminee_
@@ -566,9 +571,9 @@ _Aucune tache terminee_
 
 ### Architecture
 - **State Management :** Zustand pour global, Context API pour features specifiques
-- **Navigation :** React Navigation Stack + Bottom Tabs ([NOMBRE_TABS] tabs)
-- **Styling :** StyleSheet natif + theme system centralise
-- **Animations :** React Native Reanimated 3
+- **Routing :** Next.js App Router (file-based routing)
+- **Styling :** Tailwind CSS + theme system centralise
+- **Animations :** Framer Motion
 
 ### Firebase
 - **Auth :** [METHODES_AUTH_UTILISEES]
@@ -582,19 +587,25 @@ _Aucune tache terminee_
 
 ### Performance
 - **Optimisations prevues :**
-  - React.memo pour composants couteux
+  - Server Components par defaut (Next.js 14+)
+  - React.memo pour Client Components couteux
   - useCallback pour handlers dans listes
-  - FlatList avec windowSize optimise
-- **Images :** Compression a 70%, max 1000px largeur
-- **Cache :** AsyncStorage avec TTL 1h
+  - Dynamic imports pour code splitting
+- **Images :** next/image avec optimisation automatique
+- **Cache :** localStorage avec TTL 1h
+
+### Responsive Design
+- **Breakpoints :** Desktop (1024px+), Tablet (768px), Mobile (320px)
+- **Priorite :** [Desktop-first | Mobile-first | Traitement egal]
+- **Approche :** Mobile-first Tailwind (sm:, md:, lg:, xl:, 2xl:)
 
 ### Accessibilite
 [SI WCAG 2.1 AA/AAA]
 - **Niveau conformite :** WCAG 2.1 [AA | AAA]
-- **Props accessibilite systematiques**
+- **Props accessibilite systematiques (ARIA)**
 - **Contrastes conformes :** ≥ 4.5:1 (texte), ≥ 3:1 (UI)
-- **Tailles tactiles minimales :** 44x44 iOS / 48x48 Android
-- **Tests automatises accessibilite**
+- **Tailles cliquables minimales :** 44x44px
+- **Tests automatises accessibilite (axe-core)**
 
 ### Regles Firestore
 _Les regles seront generees progressivement apres creation des collections_
@@ -699,6 +710,6 @@ Votre app aura-t-elle un systeme d'abonnement ou d'achats ?
 
 ---
 
-🤖 _Guide destine a Claude Code - Approche incrementale pour generation fichiers MD_
+🤖 _Guide destine a Claude Code - Approche incrementale pour generation fichiers MD (Next.js)_
 
-**Derniere mise a jour :** 01/11/2025
+**Derniere mise a jour :** 02/12/2025
