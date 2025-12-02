@@ -9,16 +9,16 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <main className="flex flex-col items-center gap-8 px-6 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <main className="flex flex-col items-center gap-8 text-center" style={{ maxWidth: '800px', width: '100%' }}>
         <h1 className="text-5xl font-bold text-text">
           🏃‍♂️ ClubSportFrance
         </h1>
-        <p className="max-w-2xl text-xl text-text-secondary">
+        <p className="text-xl text-text-secondary" style={{ lineHeight: '1.8', width: '100%', maxWidth: '600px' }}>
           Decouvrez tous les clubs sportifs de France sur une carte interactive.
           Trouvez facilement un club pres de chez vous !
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <Link
             href="/map"
             className="rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary-dark"
