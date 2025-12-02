@@ -16,7 +16,7 @@
 
 Exemple :
 - Nom : FindMyCourt
-- Description : Application pour trouver et reserver des terrains de sport
+- Description : Site web pour trouver et reserver des terrains de sport
 - Public : Sportifs amateurs 18-45 ans
 ```
 
@@ -38,11 +38,11 @@ d) Autre (preciser)
 ```
 💰 Question 3/16 : Monetisation
 
-Votre app aura-t-elle un systeme d'abonnement ou d'achats ?
+Votre site aura-t-il un systeme d'abonnement ou d'achats ?
 
-a) Oui, abonnement mensuel/annuel (RevenueCat)
-b) Oui, achats in-app ponctuels
-c) Non, app 100% gratuite
+a) Oui, abonnement mensuel/annuel (Stripe)
+b) Oui, achats ponctuels
+c) Non, site 100% gratuit
 d) Freemium (base gratuite + premium payant)
 
 Si oui, preciser :
@@ -54,20 +54,18 @@ Si oui, preciser :
 ```
 ✨ Question 4/16 : Fonctionnalites Principales
 
-Quelles fonctionnalites souhaitez-vous integrer dans votre app ?
+Quelles fonctionnalites souhaitez-vous integrer dans votre site ?
 
 COCHEZ TOUTES CELLES QUI S'APPLIQUENT :
 
 📱 FONCTIONNALITES DE BASE :
-[ ] Notifications Push (alertes, rappels, marketing)
 [ ] Stockage Photos/Videos/Documents (Firebase Storage)
-[ ] Geolocalisation & Cartes (Google Maps / Apple Maps)
+[ ] Geolocalisation & Cartes (Google Maps JavaScript API)
 [ ] Recherche & Filtres (simple, avancee, ou full-text)
-[ ] Mode Hors-Ligne (sync automatique des donnees)
 [ ] Export de Donnees (JSON, PDF, CSV - RGPD)
 
 💬 FONCTIONNALITES SOCIALES :
-[ ] Chat / Messagerie (1-to-1 et/ou groupes)
+[ ] Chat / Messagerie (temps reel)
 [ ] Systeme de Groupes (creation, invitation, gestion)
 [ ] Profils Utilisateurs (publics, amis, followers)
 [ ] Partage Social (vers Facebook, Instagram, Twitter)
@@ -75,18 +73,16 @@ COCHEZ TOUTES CELLES QUI S'APPLIQUENT :
 
 📅 FONCTIONNALITES TEMPORELLES :
 [ ] Calendrier & Evenements (creation, modification, rappels)
-[ ] Integration Calendrier Natif (ajout auto dans calendrier tel)
 [ ] Systeme de Reservation/Booking (creneaux horaires)
 [ ] Disponibilites & Planning (gestion indisponibilites)
 
 📊 ANALYSE & SUIVI :
-[ ] Analytics (Firebase Analytics ou avance)
+[ ] Analytics (Firebase Analytics + Google Analytics 4)
 [ ] Tableau de Bord Admin (statistiques, metriques)
 [ ] Rapports & Exports (PDF, graphiques)
 
 🔧 TECHNIQUE :
 [ ] Backend Automatise (Cloud Functions, cron jobs, emails auto)
-[ ] Deep Linking (partage de liens vers l'app)
 [ ] Multi-langue (i18n - OBLIGATOIRE par defaut)
 [ ] Theme Clair/Sombre (OBLIGATOIRE par defaut)
 
@@ -100,42 +96,40 @@ Exemples de fonctionnalites custom :
 - Systeme de gamification (badges, points, classement)
 - Scanner QR Code
 - Signature electronique
-- Appel audio/video
-- AR/VR integration
+- Appel audio/video (WebRTC)
 - etc.
 ```
 
-## Question 4bis : Plateforme Cible
+## Question 4bis : Focus Plateforme
 ```
-📱 Question 4bis/16+ : Plateforme Cible
+💻 Question 4bis/16+ : Focus Plateforme
 
-Quelles plateformes souhaitez-vous cibler ?
+Tu as dit vouloir un site web. Quelle est la priorite ?
 
-a) iOS uniquement
-b) Android uniquement
-c) iOS + Android (recommande pour mobile)
-d) iOS + Android + Web (React Native Web)
+a) Desktop uniquement (ordinateurs)
+b) Mobile + Desktop (responsive design)
+c) Mobile d'abord (mobile-first, puis desktop)
 
 Note :
-- Expo permet de deployer facilement sur iOS et Android avec le meme code
-- React Native Web permet d'utiliser le meme code React Native pour une version Web responsive
-- Option d recommandee si vous souhaitez toucher les utilisateurs desktop/tablette via navigateur
+- Next.js permet de creer des sites responsive facilement
+- Le responsive design assure une bonne experience sur tous les appareils
+- Option b ou c recommandee pour toucher le maximum d'utilisateurs
 
-Si Web inclus :
-- Version Web complete ou version limitee (ex: consultation uniquement) ?
-- Priorite mobile-first ou traitement egal mobile/web ?
+Si responsive :
+- Quelle plateforme prioriser ? Desktop ou Mobile ?
+- Besoin d'une PWA (Progressive Web App) installable sur mobile ?
 ```
 
-## Question 5 : Notifications Push
+## Question 5 : Notifications
 ```
-🔔 Question 5/16 : Notifications Push
+🔔 Question 5/16 : Notifications
 
-Avez-vous besoin de notifications push ?
+Avez-vous besoin de notifications ?
 
-a) Oui, notifications automatiques (evenements, rappels)
-b) Oui, notifications marketing/promotionnelles
-c) Les deux
-d) Non, pas de notifications
+a) Non, pas de notifications
+b) Oui, notifications par email uniquement
+c) Oui, notifications push navigateur (Web Push API)
+d) Les deux (email + push navigateur)
 
 Si oui, exemples de notifications souhaitees ?
 ```
@@ -144,7 +138,7 @@ Si oui, exemples de notifications souhaitees ?
 ```
 📁 Question 6/16 : Stockage de Fichiers
 
-Votre app va-t-elle stocker des fichiers (photos, videos, documents) ?
+Votre site va-t-il stocker des fichiers (photos, videos, documents) ?
 
 a) Oui, photos/avatars utilisateurs
 b) Oui, photos + videos
@@ -161,20 +155,20 @@ Si oui, taille max par fichier ? Limite totale par user ?
 
 Avez-vous besoin de la geolocalisation ?
 
-a) Oui, localisation temps reel avec carte interactive
+a) Oui, localisation utilisateur avec carte interactive
 b) Oui, juste pour detecter la ville de l'utilisateur
 c) Non
 
 Si oui, preciser :
-- Besoin de tracking continu en arriere-plan ?
-- Integration Google Maps ou Apple Maps ?
+- Besoin de tracking position en temps reel ?
+- Integration Google Maps JavaScript API ?
 ```
 
 ## Question 8 : Recherche et Filtres
 ```
 🔍 Question 8/16 : Recherche et Filtres
 
-Votre app aura-t-elle un systeme de recherche ?
+Votre site aura-t-il un systeme de recherche ?
 
 a) Oui, recherche simple (texte)
 b) Oui, recherche avancee + filtres multiples
@@ -188,9 +182,9 @@ Si oui, sur quelles donnees ? (utilisateurs, produits, evenements, etc.)
 ```
 📊 Question 9/16 : Analytics
 
-Voulez-vous tracker l'utilisation de votre app ?
+Voulez-vous tracker l'utilisation de votre site ?
 
-a) Oui, Firebase Analytics (gratuit, basique)
+a) Oui, Firebase Analytics + Google Analytics 4 (gratuit, standard)
 b) Oui, Analytics avance (Mixpanel, Amplitude)
 c) Non
 
@@ -202,10 +196,10 @@ Si oui, evenements importants a tracker ?
 ```
 📴 Question 10/16 : Mode Hors-Ligne
 
-Votre app doit-elle fonctionner sans connexion ?
+Votre site doit-il fonctionner sans connexion ?
 
-a) Oui, mode offline complet avec sync automatique
-b) Oui, mais fonctionnalites limitees (lecture seule)
+a) Oui, mode offline complet avec sync automatique (PWA + Service Worker)
+b) Oui, mais fonctionnalites limitees (lecture seule en cache)
 c) Non, connexion internet obligatoire
 
 Si oui, quelles donnees doivent etre disponibles offline ?
@@ -248,7 +242,7 @@ d) Tous les formats ci-dessus (recommande)
 ```
 📜 Question 13/16 : Pagination
 
-Votre app affichera-t-elle des listes longues ?
+Votre site affichera-t-il des listes longues ?
 (ex: liste de produits, messages, evenements)
 
 Si oui, detectees automatiquement, mais quel type preferer ?
@@ -258,14 +252,14 @@ b) Pagination classique (boutons Precedent/Suivant + numeros)
 c) Load More button (bouton "Voir plus")
 d) Pas de pagination (toutes les donnees chargees d'un coup)
 
-👉 Ma recommandation : Option a (meilleure UX mobile)
+👉 Ma recommandation : Option a ou b selon le cas d'usage
 ```
 
 ## Question 14 : Chat / Messagerie
 ```
 💬 Question 14/16 : Chat / Messagerie
 
-Votre app necessite-t-elle un systeme de chat ?
+Votre site necessite-t-il un systeme de chat ?
 
 a) Oui, chat 1-to-1 (prive)
 b) Oui, chat de groupe
@@ -274,21 +268,21 @@ d) Non
 
 Si oui :
 - Messages texte uniquement ou avec medias (photos, videos) ?
-- Notifications push pour nouveaux messages ?
+- Notifications pour nouveaux messages ?
 ```
 
 ## Question 15 : Calendrier / Événements
 ```
 📅 Question 15/16 : Calendrier / Evenements
 
-Votre app gere-t-elle des evenements avec dates ?
+Votre site gere-t-il des evenements avec dates ?
 
 a) Oui, calendrier complet avec creation/modification evenements
 b) Oui, simple affichage de dates importantes
 c) Non
 
 Si oui :
-- Integration avec calendrier natif du telephone ?
+- Integration avec Google Calendar / Outlook ?
 - Rappels automatiques avant evenements ?
 ```
 
@@ -296,24 +290,24 @@ Si oui :
 ```
 ♿ Question 15bis/16+ : Accessibilite WCAG 2.1
 
-Votre app doit-elle respecter les normes d'accessibilite WCAG 2.1 ?
+Votre site doit-il respecter les normes d'accessibilite WCAG 2.1 ?
 
 a) Oui, conformite niveau AA (recommande - standard international)
 b) Oui, conformite niveau AAA (accessibilite maximale)
 c) Non, pas de conformite stricte (accessibilite de base seulement)
 
 Note :
-- WCAG 2.1 AA est le standard international pour l'accessibilite
-- Rend l'app accessible aux personnes en situation de handicap (visuel, moteur, auditif, cognitif)
-- Inclut : lecteurs d'ecran, contrastes couleurs, tailles tactiles, navigation clavier
+- WCAG 2.1 AA est le standard international pour l'accessibilite web
+- Rend le site accessible aux personnes en situation de handicap (visuel, moteur, auditif, cognitif)
+- Inclut : lecteurs d'ecran, contrastes couleurs, navigation clavier, ARIA labels
 
 Si oui, Claude implementera automatiquement :
-- Props d'accessibilite (accessibilityLabel, accessibilityHint, accessibilityRole)
+- HTML semantique (nav, main, section, article, etc.)
+- Attributs ARIA (labels, roles, states)
 - Contrastes couleurs conformes (≥ 4.5:1 pour texte, ≥ 3:1 pour UI)
-- Tailles tactiles minimales (44x44 points iOS / 48x48 dp Android)
-- Support VoiceOver (iOS) et TalkBack (Android)
-- Annonces dynamiques pour lecteurs d'ecran
-- Tests d'accessibilite automatises
+- Navigation clavier complete (focus visible, tab order)
+- Support lecteurs ecran (NVDA, JAWS, VoiceOver)
+- Tests d'accessibilite automatises (axe-core)
 
 Voir guide complet : 15_ACCESSIBILITY.md
 ```
@@ -322,15 +316,14 @@ Voir guide complet : 15_ACCESSIBILITY.md
 ```
 🔑 Question 16/16 : Permissions Speciales
 
-Votre app a-t-elle besoin d'acces speciaux ?
+Votre site a-t-il besoin d'acces speciaux ?
 
-a) Camera (photos/videos)
-b) Galerie photos
-c) Contacts
-d) Calendrier natif
-e) Microphone
-f) Bluetooth
-g) Aucune permission speciale
+a) Camera (photos/videos via webcam)
+b) Microphone (enregistrement audio)
+c) Geolocalisation (position utilisateur)
+d) Notifications navigateur (Web Push API)
+e) Clipboard (copier/coller)
+f) Aucune permission speciale
 
 Cochez toutes celles necessaires.
 ```
@@ -368,7 +361,7 @@ Une fois toutes les questions repondues ET les fichiers MD mis a jour progressiv
 2. **Finaliser README.md et CHANGELOG.md** avec toutes les informations collectees
 3. **Reformuler et resumer CLAIREMENT les reponses** avec structure organisee :
    - Informations generales (nom, description, public)
-   - Plateformes ciblees (iOS, Android, Web)
+   - Plateforme ciblee (Desktop, Mobile+Desktop, responsive)
    - Fonctionnalites detectees automatiquement
    - Accessibilite (WCAG 2.1 AA/AAA ou non)
    - Architecture technique prevue
@@ -377,11 +370,11 @@ Une fois toutes les questions repondues ET les fichiers MD mis a jour progressiv
 5. **Copier les fichiers MD deja generes** dans le dossier projet
 6. **Finaliser CHANGELOG.md** avec version 0.1.0 et date
 7. **Initialiser Git** avec premier commit
-8. **Installer Expo + dépendances** nécessaires selon les réponses
-9. **Configurer Firebase** (créer .env + firebase config)
+8. **Installer Next.js + dépendances** nécessaires selon les réponses
+9. **Configurer Firebase** (créer .env.local + firebase config)
 10. **Présenter un plan de développement** en phases prioritaires
 11. **Attendre validation** avant de commencer à coder
 
 ---
 
-🤖 _Ce guide est destiné à Claude Code pour l'initialisation automatique de projets React Native/Expo_
+🤖 _Ce guide est destiné à Claude Code pour l'initialisation automatique de projets Next.js_

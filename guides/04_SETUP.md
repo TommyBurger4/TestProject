@@ -1,6 +1,6 @@
 # 🚀 GUIDE D'INITIALISATION DE PROJET
 
-> **Étapes pour créer un nouveau projet React Native/Expo depuis zéro**
+> **Étapes pour créer un nouveau projet Next.js depuis zéro**
 
 ---
 
@@ -9,24 +9,31 @@
 Avant de commencer, le développeur doit avoir :
 
 - **Node.js** 18+ installé
-- **npm** ou **yarn**
+- **npm** ou **yarn** ou **pnpm**
 - **Git** installé et configuré
 - **Compte Firebase** créé
-- **Expo CLI** (`npm install -g expo-cli`)
-- **EAS CLI** (`npm install -g eas-cli`)
+- **Compte Vercel** (recommandé pour déploiement)
 
 ---
 
-## 🎯 Étape 1 : Créer le Projet Expo
+## 🎯 Étape 1 : Créer le Projet Next.js
 
 ```bash
-# Créer le projet avec TypeScript
-npx create-expo-app [NOM_PROJET] --template expo-template-blank-typescript
+# Créer le projet avec TypeScript et Tailwind CSS
+npx create-next-app@latest [NOM_PROJET] --typescript --tailwind --app --eslint --src-dir --import-alias "@/*"
+
+# Options expliquées:
+# --typescript : Active TypeScript
+# --tailwind : Installe Tailwind CSS
+# --app : Utilise App Router (Next.js 13+)
+# --eslint : Configure ESLint
+# --src-dir : Crée un dossier src/
+# --import-alias "@/*" : Alias pour imports (ex: @/components)
 
 # Se déplacer dans le dossier
 cd [NOM_PROJET]
 
-# Initialiser Git
+# Initialiser Git (si pas fait automatiquement)
 git init
 git branch -M main
 ```
@@ -38,9 +45,6 @@ git branch -M main
 ### Dépendances OBLIGATOIRES
 
 ```bash
-# Navigation
-npx expo install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs react-native-screens react-native-safe-area-context
-
 # Firebase
 npm install firebase
 
@@ -48,56 +52,53 @@ npm install firebase
 npm install zustand
 
 # i18n (OBLIGATOIRE)
-npx expo install expo-localization
-npm install i18n-js
+npm install next-intl
 
-# Animations
-npx expo install react-native-reanimated react-native-gesture-handler
+# Utilitaires
+npm install clsx tailwind-merge
+npm install class-variance-authority # Pour variants de composants
 
-# Utils
-npx expo install expo-constants expo-status-bar expo-splash-screen expo-font
-
-# Storage
-npx expo install @react-native-async-storage/async-storage
+# Dates (si nécessaire)
+npm install date-fns
 ```
 
 ### Dépendances CONDITIONNELLES (selon onboarding)
 
 ```bash
-# Si React Native Web (plateforme Web)
-npx expo install react-native-web react-dom @expo/webpack-config
-
 # Si Auth Google/Apple
-npx expo install @react-native-google-signin/google-signin expo-apple-authentication
+# Note: Google/Apple Sign-In se fait via Firebase Auth Web SDK
 
-# Si RevenueCat (paiements)
-npm install react-native-purchases
+# Si Stripe (paiements)
+npm install @stripe/stripe-js stripe
 
-# Si Stockage fichiers
-npx expo install expo-file-system expo-document-picker expo-image-picker
+# Si Stockage fichiers/images
+# Firebase Storage est suffisant, mais si besoin de manipulation d'images:
+npm install sharp # Sera utilisé par Next.js automatiquement
 
 # Si Géolocalisation
-npx expo install expo-location react-native-maps
+# Google Maps JavaScript API via script tag ou:
+npm install @googlemaps/js-api-loader
 
 # Si Recherche Algolia
-npm install algoliasearch react-instantsearch-native
+npm install algoliasearch react-instantsearch
 
 # Si Analytics avancés
-npm install @amplitude/analytics-react-native
+npm install @amplitude/analytics-browser
 # ou
-npm install mixpanel-react-native
+npm install mixpanel-browser
 
-# Si Camera
-npx expo install expo-camera
+# Si Forms complexes
+npm install react-hook-form
+npm install zod # Pour validation
+npm install @hookform/resolvers
 
-# Si Contacts
-npx expo install expo-contacts
+# Si Notifications navigateur (Web Push)
+# Utiliser l'API Web Push native du navigateur
 
-# Si Calendrier
-npx expo install expo-calendar
-
-# Si Notifications
-npx expo install expo-notifications
+# Si Charts/Graphiques
+npm install recharts
+# ou
+npm install chart.js react-chartjs-2
 ```
 
 ### Dev Dependencies
@@ -105,14 +106,12 @@ npx expo install expo-notifications
 ```bash
 npm install --save-dev \
   @types/react \
-  @types/jest \
-  typescript \
-  jest \
-  @testing-library/react-native \
-  @testing-library/jest-native \
-  eslint \
-  eslint-config-expo \
-  prettier
+  @types/node \
+  @testing-library/react \
+  @testing-library/jest-dom \
+  @playwright/test \
+  prettier \
+  prettier-plugin-tailwindcss
 ```
 
 ---
@@ -130,11 +129,11 @@ npm install --save-dev \
 
 ### 3.2 Récupérer les Clés Firebase WEB
 
-**⚠️ IMPORTANT : Pour Expo, TOUJOURS utiliser la config WEB**
+**⚠️ IMPORTANT : Pour Next.js, TOUJOURS utiliser la config WEB**
 
 ```
 Claude DOIT dire :
-"Pour Expo, utilise la configuration WEB de Firebase.
+"Pour Next.js, utilise la configuration WEB de Firebase.
 Va sur Firebase Console > Paramètres projet > Ajouter app > Web (</>)
 Copie la config JavaScript et donne-moi les valeurs."
 ```
@@ -144,7 +143,7 @@ Copie la config JavaScript et donne-moi les valeurs."
 1. Firebase Console > **Paramètres projet** (icône engrenage)
 2. Section "Vos applications" > Cliquer sur **"Web"** (icône `</>`)
 3. Surnom : `[NOM_APP] Web`
-4. **NE PAS cocher** "Configurer Firebase Hosting"
+4. **NE PAS cocher** "Configurer Firebase Hosting" (sauf si déploiement sur Firebase Hosting)
 5. Cliquer "Enregistrer"
 6. **Copier la configuration** :
 
@@ -160,41 +159,40 @@ const firebaseConfig = {
 };
 ```
 
-### 3.3 Créer le fichier .env
+### 3.3 Créer le fichier .env.local
 
-**Créer `.env` à la racine :**
+**Créer `.env.local` à la racine :**
 
 ```bash
 # Firebase Configuration (WEB)
-EXPO_PUBLIC_FIREBASE_API_KEY=AIzaSyC...
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=project-id.firebaseapp.com
-EXPO_PUBLIC_FIREBASE_PROJECT_ID=project-id
-EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=project-id.appspot.com
-EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789012
-EXPO_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abc123def456
-EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyC...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=project-id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=project-id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789012
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789012:web:abc123def456
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 ```
 
 **Créer `.env.example` (à commiter) :**
 
 ```bash
 # Firebase Configuration (WEB)
-EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key_here
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
-EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
-**Ajouter .env au .gitignore :**
+**Ajouter .env.local au .gitignore :**
 
 ```gitignore
 # Environment variables
-.env
+.env*.local
 .env.local
-.env.*.local
 ```
 
 ### 3.4 Activer les Services Firebase
@@ -208,7 +206,7 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 - Firebase Console > **Firestore Database**
 - "Créer une base de données"
 - Mode : **Test** (dev) ou **Production** (avec rules)
-- Région : **europe-west1** (Paris)
+- Région : **europe-west1** (Belgique) ou plus proche de vos utilisateurs
 
 **3. Storage (SI stockage fichiers) :**
 - Firebase Console > **Storage**
@@ -224,60 +222,88 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 ## 📁 Étape 4 : Créer la Structure de Dossiers
 
-**Architecture par features (OBLIGATOIRE) :**
+**Architecture Next.js App Router avec features (OBLIGATOIRE) :**
 
 ```
 [NOM_PROJET]/
 ├── src/
-│   ├── components/          # UI réutilisable
-│   │   ├── ui/              # Button, Input, Card
-│   │   └── forms/           # Composants formulaires
+│   ├── app/                    # Next.js App Router
+│   │   ├── (auth)/             # Groupe de routes auth
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── (main)/             # Groupe de routes principales
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
+│   │   │
+│   │   ├── api/                # API Routes
+│   │   │   └── hello/
+│   │   │       └── route.ts
+│   │   │
+│   │   ├── layout.tsx          # Root layout
+│   │   ├── page.tsx            # Home page
+│   │   ├── error.tsx           # Error boundary
+│   │   ├── loading.tsx         # Loading UI
+│   │   └── not-found.tsx       # 404 page
 │   │
-│   ├── features/            # Features métier
+│   ├── components/             # UI réutilisable
+│   │   ├── ui/                 # Button, Input, Card
+│   │   └── forms/              # Composants formulaires
+│   │
+│   ├── features/               # Features métier (logique)
 │   │   ├── auth/
 │   │   │   ├── components/
 │   │   │   ├── hooks/
-│   │   │   ├── screens/
 │   │   │   ├── services/
 │   │   │   └── types/
 │   │   │
-│   │   └── [feature-name]/  # Autres features
+│   │   └── [feature-name]/     # Autres features
 │   │
-│   ├── navigation/
-│   │   ├── AppNavigator.tsx
-│   │   └── types.ts
-│   │
-│   ├── services/            # Services globaux
+│   ├── services/               # Services globaux
 │   │   ├── firebase/
 │   │   │   ├── firebase.ts
 │   │   │   ├── firestore.ts
 │   │   │   └── storage.ts
 │   │   └── api/
 │   │
-│   ├── hooks/               # Hooks globaux
-│   ├── store/               # Zustand stores
-│   ├── theme/               # Thème (colors, typography)
-│   ├── utils/               # Utilitaires
-│   ├── constants/           # Constantes
-│   ├── types/               # Types globaux
-│   ├── locales/             # Traductions i18n
-│   ├── assets/              # Images, fonts
-│   └── App.tsx
+│   ├── hooks/                  # Hooks globaux
+│   ├── store/                  # Zustand stores
+│   ├── lib/                    # Utilitaires
+│   │   └── utils.ts
+│   ├── constants/              # Constantes
+│   ├── types/                  # Types globaux
+│   ├── locales/                # Traductions i18n
+│   └── styles/                 # Styles globaux
+│       └── globals.css
 │
-├── __tests__/               # Tests
-├── docs/                    # Documentation projet
-│   ├── ARCHITECTURE.md      # Architecture detaillee
-│   ├── API.md               # Documentation API/services
-│   ├── FEATURES.md          # Liste des features implementees
-│   └── DEPLOYMENT.md        # Guide de deploiement
+├── public/                     # Assets statiques
+│   ├── images/
+│   ├── icons/
+│   └── fonts/
 │
-├── .env                     # Variables (NE PAS COMMITER)
-├── .env.example             # Template (À COMMITER)
+├── __tests__/                  # Tests
+├── docs/                       # Documentation projet
+│   ├── ARCHITECTURE.md         # Architecture detaillee
+│   ├── API.md                  # Documentation API/services
+│   ├── FEATURES.md             # Liste des features implementees
+│   └── DEPLOYMENT.md           # Guide de deploiement
+│
+├── .env.local                  # Variables (NE PAS COMMITER)
+├── .env.example                # Template (À COMMITER)
 ├── .gitignore
-├── PROJECT.md               # Mémoire permanente
+├── PROJECT.md                  # Mémoire permanente
 ├── CONTRIBUTING.md
 ├── package.json
 ├── tsconfig.json
+├── next.config.js              # Config Next.js
+├── tailwind.config.ts          # Config Tailwind
+├── postcss.config.js           # Config PostCSS
 └── README.md
 ```
 
@@ -292,49 +318,43 @@ EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
  * Fichier: firebase.ts
  *
  * Configuration et initialisation de Firebase.
- * Utilise la config WEB pour compatibilite Expo.
+ * Utilise la config WEB pour Next.js.
  */
 
-import { initializeApp } from 'firebase/app';
-import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { getAnalytics } from 'firebase/analytics';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
-import Constants from 'expo-constants';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 
-// Configuration Firebase depuis .env
+// Configuration Firebase depuis .env.local
 const firebaseConfig = {
-  apiKey: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_APP_ID,
-  measurementId: Constants.expoConfig?.extra?.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialiser Firebase
-const app = initializeApp(firebaseConfig);
+// Initialiser Firebase (eviter re-initialisation en dev mode)
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
-// Initialiser Auth avec persistence React Native
-let auth;
-try {
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage),
-  });
-} catch (error) {
-  // Si deja initialise (hot reload)
-  auth = getAuth(app);
-}
-
-// Initialiser les autres services
+// Initialiser les services
+const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Analytics uniquement sur web
-const analytics = Platform.OS === 'web' ? getAnalytics(app) : null;
+// Analytics uniquement cote client
+let analytics = null;
+if (typeof window !== 'undefined') {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
 
 export { auth, db, storage, analytics };
 ```
@@ -345,22 +365,24 @@ export { auth, db, storage, analytics };
 
 ```bash
 # Vérifier que tout compile
-npm run type-check
+npm run build
 
-# Lancer les tests de base
+# Lancer les tests de base (si configurés)
 npm test
 
-# Démarrer l'app
-npm start
+# Démarrer le serveur de dev
+npm run dev
 ```
 
-**Vérifier dans la console :**
-- ✅ Aucune erreur Firebase
-- ✅ Message "Firebase initialized successfully"
+**Vérifier dans le navigateur :**
+- Ouvrir http://localhost:3000
+- ✅ Page d'accueil s'affiche
+- ✅ Aucune erreur Firebase dans la console
 
 **Si erreur "auth/invalid-api-key" :**
-- Vérifier que les clés .env sont correctes
-- Relancer l'app après modification du .env
+- Vérifier que les clés .env.local sont correctes
+- Vérifier le préfixe NEXT_PUBLIC_
+- Relancer le serveur après modification du .env.local (IMPORTANT)
 
 ---
 
@@ -373,11 +395,11 @@ git add .
 # Créer le commit
 git commit -m "chore: initial project setup
 
-- Init Expo with TypeScript
-- Install base dependencies
+- Init Next.js 14+ with App Router
+- Install base dependencies (Firebase, Zustand, Tailwind)
 - Configure Firebase
 - Setup project structure
-- Add .env configuration
+- Add .env.local configuration
 
 🤖 Generated with Claude Code"
 
@@ -394,11 +416,13 @@ git push -u origin main
 Le projet est maintenant prêt pour le développement.
 
 **Fichiers générés :**
-- ✅ Structure de dossiers complète (src/, docs/, __tests__/)
+- ✅ Structure de dossiers complète (src/app/, src/components/, src/features/)
 - ✅ Configuration Firebase
-- ✅ .env + .env.example
+- ✅ .env.local + .env.example
 - ✅ package.json avec toutes les dépendances
 - ✅ tsconfig.json
+- ✅ next.config.js
+- ✅ tailwind.config.ts
 - ✅ .gitignore
 - ✅ README.md
 - ✅ CONTRIBUTING.md
@@ -410,37 +434,20 @@ Le projet est maintenant prêt pour le développement.
 2. Mettre à jour PROJECT.md régulièrement
 3. Suivre les conventions de commit
 4. Créer des Pull Requests pour chaque feature
+5. Déployer sur Vercel quand prêt
 
 ---
 
 ## 🐛 Depannage
 
-### Probleme : "Metro Bundler ne demarre pas"
+### Probleme : "Build echoue"
 
 ```bash
-# Nettoyer le cache
-npm start -- --reset-cache
-```
-
-### Probleme : "Build Android echoue"
-
-```bash
-# Nettoyer le build
-cd android
-./gradlew clean
-cd ..
+# Nettoyer le cache Next.js
+rm -rf .next
 
 # Rebuild
-npm run android
-```
-
-### Probleme : "Pods installation echoue" (iOS)
-
-```bash
-cd ios
-pod deintegrate
-pod install
-cd ..
+npm run build
 ```
 
 ### Probleme : "Module not found"
@@ -458,42 +465,77 @@ npm install
 ### Probleme : "Port deja utilise"
 
 ```bash
-# Trouver le processus sur le port 8081
-lsof -i :8081
+# Trouver le processus sur le port 3000
+lsof -i :3000
 
 # Tuer le processus
 kill -9 [PID]
+
+# Ou utiliser un autre port
+npm run dev -- -p 3001
 ```
 
 ### Probleme : "auth/invalid-api-key" (Firebase)
 
 ```bash
-# Verifier que les cles .env sont correctes
-# Verifier le format EXPO_PUBLIC_*
-# Relancer l'app apres modification du .env
-npm start
+# Verifier que les cles .env.local sont correctes
+# Verifier le format NEXT_PUBLIC_*
+# ⚠️ IMPORTANT : Relancer le serveur apres modification du .env.local
+npm run dev
+```
+
+### Probleme : "Hydration error"
+
+```
+Cause : Difference entre HTML server et client
+Solution :
+- Verifier que les composants ne dependent pas de window/document en SSR
+- Utiliser useEffect pour code client-only
+- Utiliser dynamic import avec ssr: false si necessaire
+```
+
+```typescript
+// Exemple : Importer un composant client-only
+import dynamic from 'next/dynamic';
+
+const ClientOnlyComponent = dynamic(
+  () => import('@/components/ClientOnlyComponent'),
+  { ssr: false }
+);
+```
+
+### Probleme : "Firebase not initialized"
+
+```typescript
+// Verifier que firebase.ts est bien importe
+// Verifier que les variables d'environnement sont definies
+// Verifier que le serveur a ete relance apres ajout du .env.local
 ```
 
 ---
 
-## 📱 Tester sur un Appareil Physique
+## 🚀 Configuration Vercel (Déploiement)
 
-### Android
+### Deploiement automatique sur Vercel :
 
-1. Activer "Options pour les developpeurs" sur votre telephone
-2. Activer "Debogage USB"
-3. Connecter via USB
-4. Verifier : `adb devices`
-5. Lancer : `npm run android`
+1. Aller sur https://vercel.com
+2. Importer le projet depuis GitHub
+3. Configurer les variables d'environnement :
+   - Copier toutes les variables du .env.local
+   - Les ajouter dans Settings > Environment Variables
+4. Déployer
 
-### iOS
-
-1. Connecter l'iPhone/iPad via USB
-2. Ouvrir `ios/[NOM_PROJET].xcworkspace` dans Xcode
-3. Selectionner votre appareil
-4. Configurer le signing (certificat developpeur)
-5. Appuyer sur Run
+**Variables à ajouter sur Vercel :**
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
+```
 
 ---
 
-🤖 _Guide destiné à Claude Code - Initialisation standardisée de projets Expo_
+🤖 _Guide destiné à Claude Code - Initialisation standardisée de projets Next.js_
