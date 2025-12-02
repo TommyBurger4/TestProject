@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 ClubSportFrance (Site Web Next.js)
 
-## Getting Started
+> Carte interactive repertoriant tous les clubs de sport en France
 
-First, run the development server:
+**Public cible :** Francais en general + internationaux voulant rejoindre des clubs en France
+
+**Editeur :** Topal - Strasbourg, France
+
+**Status :** 🚧 En cours de developpement - Phase 1/15 completee
+
+**Version :** 0.1.0
+
+---
+
+## 🎯 Description
+
+ClubSportFrance est un site web permettant de :
+- **Decouvrir** tous les clubs sportifs en France sur une carte interactive
+- **Rechercher** des clubs par sport, ville, departement et niveau
+- **Contacter** les clubs via messagerie privee
+- **Sauvegarder** ses clubs favoris
+- **Partager** les clubs sur les reseaux sociaux
+
+---
+
+## 🏗️ Stack Technique
+
+### Frontend
+- **Framework :** Next.js 16 (App Router + React 19)
+- **Langage :** TypeScript (strict mode)
+- **Styling :** Tailwind CSS v4
+- **State Management :** Zustand + Context API
+- **Carte :** Google Maps JavaScript API
+- **Animations :** Framer Motion
+- **i18n :** next-intl (francais, anglais)
+
+### Backend
+- **BaaS :** Firebase
+  - Authentication (Email, Google, Apple)
+  - Firestore Database
+  - Storage (photos/videos)
+  - Cloud Functions
+  - Analytics
+
+### Deploiement
+- **Hosting :** Vercel
+- **CI/CD :** GitHub Actions
+
+---
+
+## 🚀 Installation (Developpement)
+
+### Prerequis
+- Node.js 18+
+- npm
+- Git
+- Compte Firebase
+
+### Etapes
 
 ```bash
+# Cloner le repo
+git clone https://github.com/TommyBurger4/TestProject.git
+cd TestProject/clubsportfrance
+
+# Installer les dependances
+npm install
+
+# Copier .env.example vers .env.local
+cp .env.example .env.local
+
+# Ajouter vos credentials Firebase dans .env.local
+
+# Lancer le serveur de developpement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000) dans votre navigateur pour voir le resultat.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Structure du Projet
 
-## Learn More
+```
+clubsportfrance/
+├── src/
+│   ├── app/              # Pages Next.js (App Router)
+│   ├── components/       # Composants React reutilisables
+│   │   └── ui/           # Composants UI de base
+│   ├── services/         # Services Firebase
+│   │   ├── firebase/     # Configuration Firebase
+│   │   ├── auth/         # Service d'authentification
+│   │   ├── user/         # Service utilisateur
+│   │   └── image/        # Service upload images
+│   ├── hooks/            # Hooks React personnalises
+│   ├── contexts/         # Context providers
+│   └── lib/              # Utilitaires
+├── public/               # Fichiers statiques
+└── .env.local            # Variables d'environnement (non commite)
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📊 Collections Firestore
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **users/** - Profils utilisateurs
+- **clubs/** - Base de donnees clubs sportifs
+- **conversations/** + **messages/** - Chat prive
+- **favorites/** - Clubs favoris par user
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔒 Securite
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Firestore Rules strictes par collection
+- Storage Rules pour photos
+- Validation donnees cote Cloud Functions
+- Credentials Firebase dans .env.local (jamais commite)
+- Conformite RGPD (export donnees, suppression compte)
+
+---
+
+## 📄 Documentation
+
+- **ANALYSE_CODE_EXISTANT.md** - Analyse complete du code React Native + TodoList
+- **PROJECT.md** - Memoire permanente du projet (pas encore cree)
+- **CHANGELOG.md** - Historique des versions (pas encore cree)
+- **CONTRIBUTING.md** - Guide de contribution
+
+---
+
+## 📝 Progression
+
+**Phase 1/15 : Initialisation** ✅ TERMINEE
+- Next.js initialise avec TypeScript + Tailwind
+- Firebase configure (Auth, Firestore, Storage)
+- Structure de dossiers creee
+- Theme Tailwind personnalise
+- Page d'accueil temporaire
+
+**Phase 2/15 : Services & Authentification** (en cours)
+
+---
+
+## 👥 Contribution
+
+Les contributions sont les bienvenues ! Voir **CONTRIBUTING.md** pour details.
+
+**Regles importantes :**
+- Commentaires en francais SANS accents
+- Code en anglais
+- TypeScript strict mode
+- Conventions de commits (feat, fix, docs, etc.)
+
+---
+
+## 📄 Licence
+
+**Proprietaire** - Topal, Strasbourg, France
+
+**Responsable legal :** Tom Burger
+**Contact :** contact@topal.fr
+
+---
+
+## 🔗 Liens
+
+- **GitHub :** https://github.com/TommyBurger4/TestProject
+- **Version Web :** https://clubsportfrance.vercel.app (bientot)
+
+---
+
+**Cree le 02/12/2025**
+
+🤖 _Genere avec [Claude Code](https://claude.com/claude-code)_
