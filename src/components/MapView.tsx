@@ -75,14 +75,17 @@ function UserLocationMarker() {
     }
   }, [map]);
 
-  // Icone personnalisee pour l'utilisateur
-  const userIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+  // Icone personnalisee pour l'utilisateur (pin bleu avec emoji)
+  const userIcon = new L.DivIcon({
+    html: `
+      <div class="custom-marker-pin user-marker">
+        <div class="pin-emoji">📍</div>
+      </div>
+    `,
+    className: 'custom-emoji-marker',
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50],
   });
 
   return position ? (
@@ -124,15 +127,19 @@ export const MapView: React.FC<MapViewProps> = ({
     return sportEmojis[sport] || '🏅'; // 🏅 par defaut
   };
 
-  // Fonction pour creer un marker avec emoji
+  // Fonction pour creer un marker avec emoji dans un pin
   const createEmojiIcon = (sport: string) => {
     const emoji = getSportEmoji(sport);
     return new L.DivIcon({
-      html: `<div style="font-size: 32px; text-align: center; line-height: 1;">${emoji}</div>`,
-      className: 'custom-emoji-icon',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
+      html: `
+        <div class="custom-marker-pin">
+          <div class="pin-emoji">${emoji}</div>
+        </div>
+      `,
+      className: 'custom-emoji-marker',
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -50],
     });
   };
 
