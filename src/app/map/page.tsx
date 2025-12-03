@@ -25,44 +25,58 @@ const MapView = dynamic(() => import('@/components/MapView').then(mod => ({ defa
   ),
 });
 
-// Mock data - clubs sportifs (a remplacer par vraie data Firestore plus tard)
-const MOCK_CLUBS = [
-  {
-    id: '1',
-    name: 'Tennis Club de Paris',
-    sport: 'Tennis',
-    lat: 48.8566,
-    lng: 2.3522,
-  },
-  {
-    id: '2',
-    name: 'FC Marseille',
-    sport: 'Football',
-    lat: 43.2965,
-    lng: 5.3698,
-  },
-  {
-    id: '3',
-    name: 'Lyon Basketball',
-    sport: 'Basketball',
-    lat: 45.764,
-    lng: 4.8357,
-  },
-  {
-    id: '4',
-    name: 'Toulouse Natation',
-    sport: 'Natation',
-    lat: 43.6047,
-    lng: 1.4442,
-  },
-  {
-    id: '5',
-    name: 'Nice Volley',
-    sport: 'Volleyball',
-    lat: 43.7102,
-    lng: 7.262,
-  },
+// Fonction pour generer des coordonnees aleatoires en France
+const generateRandomCoordinates = () => {
+  const lat = 42 + Math.random() * 9; // 42 to 51 (latitude France)
+  const lng = -5 + Math.random() * 13; // -5 to 8 (longitude France)
+  return { lat, lng };
+};
+
+// Sports disponibles
+const SPORTS = [
+  'Football', 'Tennis', 'Basketball', 'Natation', 'Volleyball',
+  'Rugby', 'Handball', 'Cyclisme', 'Athletisme', 'Escalade',
+  'Boxe', 'Judo', 'Equitation', 'Golf', 'Ski'
 ];
+
+// Villes francaises
+const CITIES = [
+  'Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg',
+  'Montpellier', 'Bordeaux', 'Lille', 'Rennes', 'Reims', 'Le Havre',
+  'Saint-Etienne', 'Toulon', 'Grenoble', 'Dijon', 'Angers', 'Nimes',
+  'Villeurbanne', 'Clermont-Ferrand', 'Aix-en-Provence', 'Brest', 'Limoges',
+  'Tours', 'Amiens', 'Perpignan', 'Metz', 'Besancon', 'Orleans',
+  'Mulhouse', 'Rouen', 'Caen', 'Nancy', 'Argenteuil'
+];
+
+// Prefixes de clubs
+const CLUB_PREFIXES = [
+  'Club', 'Association', 'Union', 'Cercle', 'Stade',
+  'Olympique', 'AS', 'FC', 'RC'
+];
+
+// Fonction pour generer N clubs aleatoires
+const generateMockClubs = (count: number) => {
+  const clubs = [];
+  for (let i = 1; i <= count; i++) {
+    const sport = SPORTS[Math.floor(Math.random() * SPORTS.length)];
+    const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+    const prefix = CLUB_PREFIXES[Math.floor(Math.random() * CLUB_PREFIXES.length)];
+    const coords = generateRandomCoordinates();
+
+    clubs.push({
+      id: `club-${i}`,
+      name: `${prefix} ${sport} ${city}`,
+      sport,
+      lat: coords.lat,
+      lng: coords.lng,
+    });
+  }
+  return clubs;
+};
+
+// Generer 200 clubs aleatoires
+const MOCK_CLUBS = generateMockClubs(200);
 
 export default function MapPage() {
   const { user } = useAuth();

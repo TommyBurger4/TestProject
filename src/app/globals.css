@@ -128,7 +128,7 @@ body {
   position: relative;
   z-index: 2;
   font-size: 20px;
-  transform: translateY(-5px);
+  transform: translateY(0px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,4 +138,51 @@ body {
 /* Marker utilisateur (bleu) */
 .user-marker::before {
   background: #3b82f6 !important;
+}
+
+/* === Styles pour les clusters de markers === */
+
+.custom-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.cluster-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 3px solid white;
+  transition: transform 0.2s ease;
+}
+
+.cluster-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Cluster petit (< 50 clubs) - Bleu transparent */
+.cluster-small {
+  background: rgba(59, 130, 246, 0.8);
+  font-size: 14px;
+}
+
+/* Cluster moyen (50-99 clubs) - Orange transparent */
+.cluster-medium {
+  background: rgba(245, 158, 11, 0.8);
+  font-size: 16px;
+  width: 50px;
+  height: 50px;
+}
+
+/* Cluster grand (100+ clubs) - Rouge transparent */
+.cluster-large {
+  background: rgba(239, 68, 68, 0.8);
+  font-size: 18px;
+  width: 60px;
+  height: 60px;
 }
