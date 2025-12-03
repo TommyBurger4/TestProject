@@ -1,191 +1,151 @@
 'use client';
 
 /**
- * Composant MapView - Carte interactive Google Maps
+ * Composant MapView - Carte interactive avec Leaflet
  *
- * Affiche une carte Google Maps avec :
+ * Affiche une carte Leaflet (OpenStreetMap) avec :
+ * - Centree sur la France par defaut
  * - Geolocalisation utilisateur
  * - Markers de clubs sportifs
  * - Bouton recentrage
- * - Accessible sans authentification
+ * - Gratuit et sans cle API
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix pour les icones Leaflet avec Next.js
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 interface MapViewProps {
-  center?: { lat: number; lng: number };
+  center?: [number, number];
   zoom?: number;
-  onMapLoad?: (map: google.maps.Map) => void;
+  clubs?: Array<{
+    id: string;
+    name: string;
+    sport: string;
+    lat: number;
+    lng: number;
+  }>;
 }
 
-export const MapView: React.FC<MapViewProps> = ({
-  center = { lat: 48.8566, lng: 2.3522 }, // Paris par defaut
-  zoom = 6,
-  onMapLoad,
-}) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const userMarkerRef = useRef<google.maps.Marker | null>(null);
+// Composant pour recentrer la carte
+function RecenterButton({ center }: { center: [number, number] }) {
+  const map = useMap();
 
-  // Charger Google Maps API
+  const handleRecenter = () => {
+    map.setView(center, 12);
+  };
+
+  return (
+    <button
+      onClick={handleRecenter}
+      className="absolute bottom-6 right-6 z-[1000] h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:bg-primary-dark transition-colors flex items-center justify-center text-2xl"
+      aria-label="Recentrer sur ma position"
+    >
+      📍
+    </button>
+  );
+}
+
+// Composant pour gerer la geolocalisation
+function UserLocationMarker() {
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const map = useMap();
+
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-    if (!apiKey) {
-      setError('Google Maps API key manquante. Ajoutez NEXT_PUBLIC_GOOGLE_MAPS_API_KEY dans .env.local');
-      setLoading(false);
-      return;
-    }
-
-    // Charger le script Google Maps
-    const loadGoogleMaps = () => {
-      // Verifier si le script est deja charge
-      if (window.google && window.google.maps) {
-        initMap();
-        return;
-      }
-
-      // Creer le script
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        initMap();
-      };
-      script.onerror = () => {
-        setError('Impossible de charger Google Maps. Verifiez votre connexion et votre cle API.');
-        setLoading(false);
-      };
-
-      document.head.appendChild(script);
-    };
-
-    const initMap = () => {
-      if (mapRef.current && window.google) {
-        // Creer la carte
-        const map = new google.maps.Map(mapRef.current, {
-          center,
-          zoom,
-          mapTypeControl: true,
-          streetViewControl: false,
-          fullscreenControl: true,
-          zoomControl: true,
-        });
-
-        mapInstanceRef.current = map;
-
-        // Callback quand la carte est prete
-        if (onMapLoad) {
-          onMapLoad(map);
-        }
-
-        setLoading(false);
-
-        // Demander geolocalisation
-        requestUserLocation(map);
-      }
-    };
-
-    loadGoogleMaps();
-  }, []);
-
-  // Demander geolocalisation utilisateur
-  const requestUserLocation = (map: google.maps.Map) => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userPos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-
-          setUserLocation(userPos);
-
-          // Creer marker position utilisateur
-          const marker = new google.maps.Marker({
-            position: userPos,
-            map,
-            title: 'Ma position',
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: '#4285F4',
-              fillOpacity: 1,
-              strokeColor: '#FFFFFF',
-              strokeWeight: 2,
-            },
-          });
-
-          userMarkerRef.current = marker;
-
-          // Centrer la carte sur l'utilisateur
-          map.setCenter(userPos);
-          map.setZoom(12);
+        (pos) => {
+          const userPos: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+          setPosition(userPos);
+          map.setView(userPos, 12);
         },
         (error) => {
           console.warn('Geolocalisation refusee:', error);
-          // Ne pas afficher d'erreur, juste rester sur Paris
         }
       );
     }
-  };
+  }, [map]);
 
-  // Recentrer sur l'utilisateur
-  const handleCenterOnUser = () => {
-    if (userLocation && mapInstanceRef.current) {
-      mapInstanceRef.current.setCenter(userLocation);
-      mapInstanceRef.current.setZoom(12);
-    }
-  };
+  // Icone personnalisee pour l'utilisateur
+  const userIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
 
-  if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto"></div>
-          <p className="text-gray-600">Chargement de la carte...</p>
-        </div>
-      </div>
-    );
-  }
+  return position ? (
+    <>
+      <Marker position={position} icon={userIcon}>
+        <Popup>
+          <strong>Vous etes ici</strong>
+        </Popup>
+      </Marker>
+      <RecenterButton center={position} />
+    </>
+  ) : null;
+}
 
-  if (error) {
-    return (
-      <div className="flex h-full items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <p className="text-red-600 font-semibold mb-2">Erreur</p>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </div>
-    );
-  }
+export const MapView: React.FC<MapViewProps> = ({
+  center = [46.603354, 1.888334], // Centre de la France
+  zoom = 6,
+  clubs = [],
+}) => {
+  // Icone personnalisee pour les clubs
+  const clubIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
 
   return (
     <div className="relative h-full w-full">
-      {/* Carte Google Maps */}
-      <div ref={mapRef} className="h-full w-full" />
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom={true}
+        className="h-full w-full"
+        style={{ height: '100%', width: '100%' }}
+      >
+        {/* Tuiles OpenStreetMap (gratuit) */}
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
-      {/* Bouton recentrer sur utilisateur */}
-      {userLocation && (
-        <button
-          onClick={handleCenterOnUser}
-          className="absolute bottom-6 right-6 h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:bg-primary-dark transition-colors flex items-center justify-center text-2xl"
-          aria-label="Recentrer sur ma position"
-        >
-          📍
-        </button>
-      )}
+        {/* Marker position utilisateur + bouton recentrage */}
+        <UserLocationMarker />
 
-      {/* Message permission */}
-      {!userLocation && !loading && (
-        <div className="absolute top-0 left-0 right-0 bg-info text-white py-3 px-4 text-center text-sm">
-          Activez la localisation pour voir les clubs a proximite
-        </div>
-      )}
+        {/* Markers des clubs */}
+        {clubs.map((club) => (
+          <Marker
+            key={club.id}
+            position={[club.lat, club.lng]}
+            icon={clubIcon}
+          >
+            <Popup>
+              <div className="text-center">
+                <strong className="text-lg">{club.name}</strong>
+                <p className="text-gray-600 text-sm mt-1">{club.sport}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
     </div>
   );
 };

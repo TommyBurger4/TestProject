@@ -4,10 +4,10 @@
  * Page /map - Carte interactive des clubs sportifs
  *
  * Ecran principal accessible a tous (avec ou sans connexion)
- * Affiche une carte Google Maps avec tous les clubs sportifs de France
+ * Affiche une carte Leaflet avec tous les clubs sportifs de France
  */
 
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { MapView } from '@/components/MapView';
 import { useAuth } from '@/contexts/AuthContext';
@@ -53,42 +53,6 @@ const MOCK_CLUBS = [
 
 export default function MapPage() {
   const { user } = useAuth();
-  const [selectedClub, setSelectedClub] = useState<string | null>(null);
-
-  // Callback quand la carte est chargee
-  const handleMapLoad = useCallback((map: google.maps.Map) => {
-    // Ajouter les markers des clubs sportifs
-    MOCK_CLUBS.forEach((club) => {
-      const marker = new google.maps.Marker({
-        position: { lat: club.lat, lng: club.lng },
-        map,
-        title: club.name,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 10,
-          fillColor: '#3b82f6',
-          fillOpacity: 0.8,
-          strokeColor: '#FFFFFF',
-          strokeWeight: 2,
-        },
-      });
-
-      // Info window au clic sur marker
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div style="padding: 8px;">
-            <h3 style="font-weight: bold; margin-bottom: 4px;">${club.name}</h3>
-            <p style="color: #6b7280; font-size: 14px;">${club.sport}</p>
-          </div>
-        `,
-      });
-
-      marker.addListener('click', () => {
-        infoWindow.open(map, marker);
-        setSelectedClub(club.id);
-      });
-    });
-  }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -127,7 +91,7 @@ export default function MapPage() {
 
       {/* Carte */}
       <main className="flex-1 relative">
-        <MapView onMapLoad={handleMapLoad} />
+        <MapView clubs={MOCK_CLUBS} />
 
         {/* Legende */}
         <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
@@ -136,11 +100,11 @@ export default function MapPage() {
             Explorez {MOCK_CLUBS.length} clubs sportifs en France
           </p>
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span className="inline-block w-3 h-3 rounded-full bg-primary"></span>
+            <span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>
             <span>Clubs sportifs</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-blue-500"></span>
+            <span className="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
             <span>Votre position</span>
           </div>
         </div>
