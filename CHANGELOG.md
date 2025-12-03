@@ -10,7 +10,68 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 ## [Non publie]
 
 ### En cours
-- Initialisation du projet en cours...
+- Integration avec Firebase Firestore pour clubs reels (remplacer mock data)
+- Systeme d'authentification (login, register)
+
+---
+
+## [0.2.0] - 2025-12-03
+
+### 🗺️ Carte interactive complete
+
+#### Ajoute
+- **Carte interactive Leaflet** :
+  - Integration Leaflet 1.9.4 + react-leaflet
+  - Tiles OpenStreetMap (gratuit, sans API key)
+  - Carte centree sur la France (lat 46.6, lng 1.9)
+  - Dynamic import avec ssr: false pour Next.js
+- **Geolocalisation utilisateur** :
+  - Detection position automatique (navigator.geolocation)
+  - Centrage automatique sur position utilisateur
+  - Bouton recentrage sur position
+  - Marker utilisateur personnalise (pin bleu avec emoji 📍)
+- **Markers personnalises** :
+  - 15 sports avec emojis (⚽🎾🏀🏊🏐🏉🤾🚴🏃🧗🥊🥋🏇⛳⛷️)
+  - Pin rouge avec emoji du sport au centre
+  - Marker utilisateur en pin bleu
+  - Popup au clic (nom club, sport, emoji)
+- **Clustering intelligent** :
+  - react-leaflet-cluster pour grouper markers proches
+  - 3 niveaux de clusters :
+    - Small (< 50 clubs): bleu semi-transparent
+    - Medium (50-99 clubs): orange semi-transparent
+    - Large (100+ clubs): rouge semi-transparent
+  - Opacite 50% pour transparence
+  - Animation hover scale(1.1)
+  - Border blanc et box-shadow
+- **200 clubs de demo** :
+  - Generation aleatoire pour tester clustering
+  - 15 sports, 35 villes francaises
+  - Coordonnees aleatoires France (lat 42-51, lng -5 a 8)
+  - Noms generes : "Prefixe Sport Ville"
+- **Page /map** :
+  - Page principale (redirection depuis /)
+  - Header avec navigation
+  - Legende explicative en overlay
+  - Stats rapides (nombre de clubs)
+  - Layout fullscreen responsive
+
+#### Modifie
+- Passage de Google Maps a Leaflet (open source, gratuit)
+- Structure Next.js 16.0.6 avec React 19
+- Tailwind CSS v4
+
+#### Corrige
+- SSR error "window is not defined" (dynamic import)
+- Clusters invisibles (import CSS manquants)
+- Styles clusters override (ajout !important)
+- Position emoji dans pin (translateY 0px)
+
+#### Technique
+- Leaflet 1.9.4, react-leaflet, react-leaflet-cluster
+- OpenStreetMap tiles (CDN gratuit)
+- CSS personnalise pour pins et clusters
+- Geolocalisation browser native
 
 ---
 
@@ -66,4 +127,4 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 
 🤖 _Genere avec [Claude Code](https://claude.com/claude-code)_
 
-**Derniere mise a jour :** 03/11/2025
+**Derniere mise a jour :** 03/12/2025

@@ -1,8 +1,8 @@
 # 🌐 ClubSportFrance (Site Web)
 
 **Cree le :** 02/12/2025
-**Derniere mise a jour :** 02/12/2025 15:00
-**Version actuelle :** 0.1.0
+**Derniere mise a jour :** 03/12/2025 10:30
+**Version actuelle :** 0.2.0
 
 ---
 
@@ -15,12 +15,13 @@
 **Plateforme :** Web (Desktop prioritaire, responsive mobile plus tard)
 
 **Technologies principales :**
-- Next.js 14+ (React + App Router + SSR)
+- Next.js 16.0.6 (React 19 + App Router + SSR)
 - Firebase (Auth, Firestore, Storage, Analytics, Cloud Functions)
 - TypeScript
 - Zustand (state management global)
-- Tailwind CSS (styling)
-- Google Maps JavaScript API
+- Tailwind CSS v4 (styling)
+- Leaflet + react-leaflet (cartes interactives OpenStreetMap)
+- react-leaflet-cluster (clustering de markers)
 
 ---
 
@@ -86,8 +87,9 @@
 - **Active :** Oui
 - **Type :** Localisation temps reel avec carte interactive
 - **Usage :** Centrer la carte sur la position de l'utilisateur pour afficher clubs a proximite
-- **Integration :** Google Maps JavaScript API (standard web)
+- **Integration :** Leaflet + OpenStreetMap (gratuit, sans API key)
 - **Geolocalisation navigateur :** navigator.geolocation API
+- **Clustering :** react-leaflet-cluster pour grouper les markers proches
 
 ### Recherche
 - **Active :** Oui
@@ -401,12 +403,12 @@ app/
 
 ## 📊 TODOLIST
 
-**Progression globale : 0/90 (0%)**
+**Progression globale : 8/90 (9%)**
 
-### ⏳ EN COURS (1)
-- [~] Transformation projet mobile en site web Next.js
+### ⏳ EN COURS (0)
+_Aucune tache en cours_
 
-### ⬜ A FAIRE (89)
+### ⬜ A FAIRE (82)
 
 #### 🚀 PHASE 1 : INITIALISATION NEXT.JS (0/15) ⬜
 - [ ] [FEATURE] Initialiser projet Next.js 14+ avec TypeScript | Added: 02/12/2025
@@ -445,15 +447,16 @@ app/
 - [ ] [FEATURE] Composant ImageUpload reutilisable | Added: 02/12/2025
 - [ ] [FEATURE] API Route /api/users (CRUD utilisateurs) | Added: 02/12/2025
 
-#### 🗺️ PHASE 4 : CARTE & GEOLOCALISATION (0/8) ⬜
-- [ ] [FEATURE] Installer @googlemaps/js-api-loader | Added: 02/12/2025
-- [ ] [FEATURE] Creer composant MapView (Google Maps JS) | Added: 02/12/2025
-- [ ] [FEATURE] Creer locationService.ts (geolocalisation navigateur) | Added: 02/12/2025
-- [ ] [FEATURE] Page Carte (/) - page accueil | Added: 02/12/2025
-- [ ] [FEATURE] Centrer carte sur position utilisateur | Added: 02/12/2025
-- [ ] [FEATURE] Bouton recentrage position | Added: 02/12/2025
-- [ ] [FEATURE] Afficher marqueurs clubs sur carte | Added: 02/12/2025
-- [ ] [FEATURE] InfoWindow au clic marqueur (nom, sport, distance, lien) | Added: 02/12/2025
+#### 🗺️ PHASE 4 : CARTE & GEOLOCALISATION (7/8) ✅
+- [X] [FEATURE] Installer leaflet + react-leaflet + react-leaflet-cluster | Completed: 03/12/2025
+- [X] [FEATURE] Creer composant MapView (Leaflet OpenStreetMap) | Completed: 03/12/2025
+- [X] [FEATURE] Geolocalisation utilisateur integree (navigator.geolocation) | Completed: 03/12/2025
+- [X] [FEATURE] Page Carte (/map) - page accueil (redirection depuis /) | Completed: 03/12/2025
+- [X] [FEATURE] Centrer carte sur position utilisateur | Completed: 03/12/2025
+- [X] [FEATURE] Bouton recentrage position | Completed: 03/12/2025
+- [X] [FEATURE] Afficher marqueurs clubs sur carte (200 clubs generes) | Completed: 03/12/2025
+- [X] [FEATURE] Clustering markers avec react-leaflet-cluster | Completed: 03/12/2025
+- [ ] [FEATURE] Popup au clic marqueur (nom, sport, distance, lien) | Added: 02/12/2025
 
 #### 🏅 PHASE 5 : CLUBS SPORTIFS (0/13) ⬜
 - [ ] [FEATURE] Collection clubs/ Firestore (structure complete) | Added: 02/12/2025
@@ -560,12 +563,50 @@ app/
 - [ ] [DEPLOY] Deployer Firestore Rules | Added: 02/12/2025
 - [ ] [DEPLOY] Deployer Storage Rules | Added: 02/12/2025
 
-### ✅ TERMINE (0)
-_Aucune tache terminee_
+### ✅ TERMINE (8)
+- [X] [FEATURE] Installer leaflet + react-leaflet + react-leaflet-cluster | Completed: 03/12/2025
+- [X] [FEATURE] Creer composant MapView (Leaflet OpenStreetMap) | Completed: 03/12/2025
+- [X] [FEATURE] Geolocalisation utilisateur integree | Completed: 03/12/2025
+- [X] [FEATURE] Page Carte (/map) - page accueil | Completed: 03/12/2025
+- [X] [FEATURE] Centrer carte sur position utilisateur | Completed: 03/12/2025
+- [X] [FEATURE] Bouton recentrage position | Completed: 03/12/2025
+- [X] [FEATURE] Afficher marqueurs clubs sur carte (200 clubs generes) | Completed: 03/12/2025
+- [X] [FEATURE] Clustering markers avec react-leaflet-cluster | Completed: 03/12/2025
 
 ---
 
 ## 📅 JOURNAL DE DEVELOPPEMENT
+
+### 03/12/2025 10:30 - Implementation carte interactive Leaflet
+- 🗺️ **CARTE INTERACTIVE COMPLETE** : Page principale avec carte OpenStreetMap
+- **Technologies** :
+  - Leaflet 1.9.4 + react-leaflet pour l'integration React
+  - OpenStreetMap tiles (gratuit, sans API key)
+  - react-leaflet-cluster pour le clustering de markers
+- **Fonctionnalites implementees** :
+  - Carte centree sur la France (lat 46.6, lng 1.9, zoom 6)
+  - Geolocalisation utilisateur automatique (navigator.geolocation API)
+  - Bouton recentrage sur position utilisateur
+  - 200 clubs generes aleatoirement pour demo :
+    - 15 sports avec emojis (⚽🎾🏀🏊🏐🏉🤾🚴🏃🧗🥊🥋🏇⛳⛷️)
+    - 35 villes francaises
+    - Coordonnees lat 42-51, lng -5 a 8
+  - Markers personnalises (pin rouge avec emoji du sport)
+  - Marker utilisateur personnalise (pin bleu avec 📍)
+  - Clustering intelligent :
+    - Cluster small (< 50 clubs): bleu semi-transparent
+    - Cluster medium (50-99 clubs): orange semi-transparent
+    - Cluster large (100+ clubs): rouge semi-transparent
+    - Opacite 50% pour voir la carte en dessous
+  - Popup au clic sur marker (nom club, sport, emoji)
+  - Legende explicative en overlay
+  - Redirection depuis / vers /map
+- **Corrections effectuees** :
+  - Fix SSR : dynamic import avec ssr: false pour Leaflet
+  - Fix CSS : import styles react-leaflet-cluster manquants
+  - Fix override styles : !important pour forcer les styles personnalises
+- **Progression** : Phase 4 Carte & Geolocalisation 7/8 taches (87%)
+- **Prochaine etape** : Remplacer clubs mock par vraie data Firestore
 
 ### 02/12/2025 15:00 - Decision transformation site web Next.js
 - 🔄 **TRANSFORMATION MAJEURE** : Passage de React Native/Expo a Next.js site web
@@ -588,12 +629,21 @@ _Aucune tache terminee_
 ## 🎯 DECISIONS TECHNIQUES
 
 ### Architecture
-- **Framework :** Next.js 14+ (App Router)
+- **Framework :** Next.js 16.0.6 (App Router)
 - **Rendering :** SSR (Server-Side Rendering) pour pages publiques (SEO), CSR (Client-Side) pour dashboard
 - **State Management :** Zustand pour global, Context API pour features specifiques (auth, theme)
 - **Routing :** Next.js App Router (file-based routing)
-- **Styling :** Tailwind CSS + theme system (WCAG 2.1 AA)
-- **Maps :** Google Maps JavaScript API (@googlemaps/js-api-loader)
+- **Styling :** Tailwind CSS v4 + theme system (WCAG 2.1 AA)
+- **Maps :** Leaflet 1.9.4 + react-leaflet + react-leaflet-cluster
+  - **Choix Leaflet vs Google Maps** :
+    - ✅ Gratuit et open source (OpenStreetMap)
+    - ✅ Pas de cle API requise
+    - ✅ Pas de quota/limite
+    - ✅ Personnalisation CSS facile (markers, clusters)
+    - ✅ Performance excellente (tiles CDN OpenStreetMap)
+    - ✅ Clustering natif avec react-leaflet-cluster
+    - ❌ Moins de features que Google Maps (Street View, Places API)
+    - Note : Google Maps pourra etre ajoute plus tard si besoin
 
 ### Firebase
 - **Auth :** Email/Password + Google + Apple Sign-In
@@ -648,6 +698,6 @@ _Aucun probleme connu pour le moment_
 
 ---
 
-**Derniere mise a jour par Claude Code le 02/12/2025**
+**Derniere mise a jour par Claude Code le 03/12/2025**
 
 🤖 _Genere avec [Claude Code](https://claude.com/claude-code)_
