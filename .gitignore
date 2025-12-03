@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Dossiers du projet Next.js (sous-repo)
+clubsportfrance/
+ClubSportFrance_backup_mobile/
