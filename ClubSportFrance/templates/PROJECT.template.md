@@ -1,8 +1,8 @@
-# 📱 [NOM_PROJET]
+# 🌐 [NOM_PROJET]
 
 **Cree le :** [DATE_CREATION]
 **Derniere mise a jour :** [DATE_MAJ] [HEURE_MAJ]
-**Version actuelle :** 0.1.0 (Build 1 / versionCode 1)
+**Version actuelle :** 0.1.0
 
 ---
 
@@ -12,14 +12,15 @@
 
 **Public cible :** [PUBLIC_CIBLE]
 
-**Plateformes :** iOS, Android[WEB_SI_ACTIF]
+**Plateforme :** Site Web responsive (Desktop + Mobile)
 
 **Technologies principales :**
-- React Native + Expo v[VERSION_EXPO]
+- Next.js 14+ (App Router)
 - Firebase (Auth, Firestore, Storage[ANALYTICS_SI_ACTIF][FUNCTIONS_SI_ACTIF])
 - TypeScript
+- Tailwind CSS
 - Zustand (state management)
-- React Navigation v7
+- Framer Motion (animations)
 [TECHNOLOGIES_SUPPLEMENTAIRES]
 
 ---
@@ -83,8 +84,12 @@
 - **Active :** [OUI/NON]
 - **Integration native :** [OUI/NON]
 
-### Permissions
-- [LISTE_PERMISSIONS]
+### Priorite Responsive
+- **Priorite :** [DESKTOP_FIRST/MOBILE_FIRST/EGAL]
+- **Breakpoints :** Desktop (1024px+), Tablet (768px), Mobile (320px)
+
+### Permissions Web API
+- [LISTE_PERMISSIONS_WEB]
 
 ---
 
@@ -98,15 +103,15 @@ _Aucune tache en cours_
 ### ⬜ A FAIRE ([TOTAL_TACHES])
 
 #### 🚀 PHASE 1 : INITIALISATION (0/10) ⬜
-- [ ] [FEATURE] Creer structure dossiers | Added: [DATE]
-- [ ] [FEATURE] Installer dependances | Added: [DATE]
-- [ ] [FEATURE] Configurer Firebase | Added: [DATE]
+- [ ] [FEATURE] Creer structure dossiers Next.js (app/, components/, services/) | Added: [DATE]
+- [ ] [FEATURE] Installer dependances (Next.js, Tailwind, Firebase, etc.) | Added: [DATE]
+- [ ] [FEATURE] Configurer Firebase (Web SDK) | Added: [DATE]
 - [ ] [FEATURE] Setup Git et premier commit | Added: [DATE]
-- [ ] [FEATURE] Creer theme (colors, typography, spacing) | Added: [DATE]
-- [ ] [FEATURE] Setup i18n ([LANGUES]) | Added: [DATE]
-- [ ] [FEATURE] Configurer navigation | Added: [DATE]
+- [ ] [FEATURE] Creer theme Tailwind (colors, typography, spacing) | Added: [DATE]
+- [ ] [FEATURE] Setup i18n next-intl ([LANGUES]) | Added: [DATE]
+- [ ] [FEATURE] Configurer routing Next.js App Router | Added: [DATE]
 - [ ] [FEATURE] Creer composants UI de base (Button, Input, Card) | Added: [DATE]
-- [ ] [FEATURE] Setup tests (Jest config) | Added: [DATE]
+- [ ] [FEATURE] Setup tests (Jest + Playwright config) | Added: [DATE]
 - [ ] [DOCS] Creer README.md | Added: [DATE]
 
 [PHASES_SUPPLEMENTAIRES_SELON_FONCTIONNALITES]
@@ -131,9 +136,9 @@ _Aucune tache terminee_
 
 ### Architecture
 - **State Management :** Zustand pour global, Context API pour features specifiques
-- **Navigation :** React Navigation Stack + Bottom Tabs ([NOMBRE_TABS] tabs)
-- **Styling :** StyleSheet natif + theme system centralise
-- **Animations :** React Native Reanimated 3
+- **Routing :** Next.js App Router (file-based routing)
+- **Styling :** Tailwind CSS + theme system centralise
+- **Animations :** Framer Motion
 
 ### Firebase
 - **Auth :** [METHODES_AUTH]
@@ -143,11 +148,17 @@ _Aucune tache terminee_
 
 ### Performance
 - **Optimisations prevues :**
-  - React.memo pour composants couteux
+  - Server Components par defaut (Next.js 14+)
+  - React.memo pour Client Components couteux
   - useCallback pour handlers dans listes
-  - FlatList avec windowSize optimise
-- **Images :** Compression a 70%, max 1000px largeur
-- **Cache :** AsyncStorage avec TTL 1h
+  - Dynamic imports pour code splitting
+- **Images :** next/image avec optimisation automatique
+- **Cache :** localStorage avec TTL 1h
+
+### Responsive Design
+- **Breakpoints :** Desktop (1024px+), Tablet (768px), Mobile (320px)
+- **Priorite :** [DESKTOP_FIRST/MOBILE_FIRST/EGAL]
+- **Approche :** Mobile-first Tailwind (sm:, md:, lg:, xl:, 2xl:)
 
 ### Regles Firestore (a generer apres creation collections)
 _Les regles seront generees automatiquement au fur et a mesure_
@@ -166,13 +177,16 @@ _Aucun probleme connu pour le moment_
 - [ ] Implementer cascade delete
 - [ ] Ajouter rate limiting sur Cloud Functions
 - [ ] Generer Privacy Policy et Terms of Service
-- [ ] Configurer Crashlytics ou Sentry
-- [ ] Tests E2E avec Detox
+- [ ] Configurer Sentry pour monitoring erreurs
+- [ ] Tests E2E avec Playwright
+- [ ] Optimiser Lighthouse score (>90)
+- [ ] Configurer domaine custom sur Vercel
 
 ### Dependances a surveiller
-- expo : Maj majeure tous les 3 mois environ
+- next : Maj majeure tous les 3-4 mois environ
 - firebase : Verifier breaking changes
-- react-native-reanimated : Nouvelles versions
+- tailwindcss : Verifier nouvelles versions
+- framer-motion : Nouvelles versions
 
 ### Conventions equipe
 - Code review obligatoire (1 approbation minimum)
@@ -186,9 +200,9 @@ _Aucun probleme connu pour le moment_
 
 - **GitHub Repo :** [GIT_URL]
 - **Firebase Console :** https://console.firebase.google.com/project/[FIREBASE_PROJECT_ID]
+- **Vercel Dashboard :** https://vercel.com/[VERCEL_ORG]/[PROJECT_NAME]
+- **Site Web (Production) :** https://[DOMAIN].vercel.app
 - **Figma Design :** [FIGMA_URL]
-- **App Store Connect :** https://appstoreconnect.apple.com
-- **Google Play Console :** https://play.google.com/console
 
 ---
 

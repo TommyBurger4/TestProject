@@ -1,0 +1,75 @@
+rules_version = '2';
+
+/**
+ * Regles de securite Firestore - ClubSportFrance
+ *
+ * IMPORTANT: Ces regles suivent une approche reactive.
+ * Elles sont generees progressivement au fur et a mesure
+ * que de nouvelles features sont ajoutees.
+ *
+ * Phase 2: Services & Authentification
+ * - Collection users/ (profils utilisateurs)
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // === Helper Functions ===
+
+    // Verifie si l'utilisateur est authentifie
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Verifie si l'utilisateur est le proprietaire du document
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Verifie si les champs obligatoires sont presents
+    function hasRequiredUserFields() {
+      return request.resource.data.keys().hasAll([
+        'uid', 'email', 'displayName', 'role', 'createdAt', 'updatedAt'
+      ]);
+    }
+
+    // Verifie que le role est valide
+    function hasValidRole() {
+      return request.resource.data.role in ['user', 'club'];
+    }
+
+    // === Collection: users/ ===
+    // Gestion des profils utilisateurs
+
+    match /users/{userId} {
+      // Lecture: Autorisee pour utilisateurs authentifies
+      // (pour afficher profils publics, chats, etc.)
+      allow read: if isSignedIn();
+
+      // Creation: Autorisee uniquement pour son propre profil
+      // avec validation des champs
+      allow create: if isOwner(userId)
+                    && hasRequiredUserFields()
+                    && hasValidRole()
+                    && request.resource.data.uid == userId
+                    && request.resource.data.email == request.auth.token.email;
+
+      // Mise a jour: Autorisee uniquement pour son propre profil
+      // avec validation que certains champs ne changent pas
+      allow update: if isOwner(userId)
+                    && request.resource.data.uid == resource.data.uid
+                    && request.resource.data.email == resource.data.email
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.createdAt == resource.data.createdAt;
+
+      // Suppression: Autorisee uniquement pour son propre profil
+      allow delete: if isOwner(userId);
+    }
+
+    // === Default Rule ===
+    // Par defaut, tout acces est refuse
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

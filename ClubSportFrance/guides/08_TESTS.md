@@ -1,6 +1,6 @@
-# 🧪 TESTS
+# 🧪 TESTS (NEXT.JS)
 
-> **Guide complet des tests : philosophie, configuration, et exemples**
+> **Guide complet des tests Next.js : philosophie, configuration Jest, et Playwright E2E**
 
 ---
 
@@ -12,7 +12,7 @@
 
 - **Tests unitaires** : Fonctions utilitaires, services, hooks
 - **Tests d'integration** : Composants avec interactions
-- **Tests E2E** : Parcours utilisateur complets (optionnel, si temps)
+- **Tests E2E** : Parcours utilisateur complets avec Playwright (optionnel, si temps)
 
 ---
 
@@ -32,7 +32,7 @@ Au lieu de ca, Claude doit :
 Claude: "J'ai cree authService.ts avec la fonction login().
 Pour tester cette fonction, tu peux :
 
-1. Ouvrir l'app et aller sur l'ecran de login
+1. Ouvrir http://localhost:3000/login dans ton navigateur
 2. Essayer de te connecter avec :
    - Email valide + mot de passe valide → devrait reussir
    - Email invalide → devrait afficher "Email invalide"
@@ -40,9 +40,10 @@ Pour tester cette fonction, tu peux :
    - Pas de connexion internet → devrait afficher "Erreur reseau"
 
 Pour verifier que ca marche :
-- Tu devrais etre redirige vers HomeScreen apres connexion reussie
-- Le token devrait etre stocke dans AsyncStorage
+- Tu devrais etre redirige vers /dashboard apres connexion reussie
+- Le token devrait etre stocke dans localStorage
 - Tu peux checker les logs avec console.log dans authService.ts
+- Tu peux ouvrir DevTools > Application > Local Storage pour voir le token
 
 Tu veux que je t'aide a debugger si quelque chose ne marche pas ?"
 ```
@@ -50,14 +51,14 @@ Tu veux que je t'aide a debugger si quelque chose ne marche pas ?"
 ### Exemple : Apres Creation d'un Composant
 
 ```
-Claude: "J'ai cree le composant CustomButton.tsx.
+Claude: "J'ai cree le composant Button.tsx.
 Pour tester ce bouton, tu peux :
 
-1. Ouvrir LoginScreen.tsx (ou j'ai ajoute le bouton)
+1. Ouvrir la page /login (ou j'ai ajoute le bouton)
 2. Verifier que :
    - Le bouton s'affiche correctement
    - Le texte est lisible (contraste suffisant)
-   - Le bouton reagit au toucher (changement visuel)
+   - Le bouton reagit au hover (changement visuel)
    - Le loading spinner s'affiche pendant l'action
    - Le bouton est desactive quand disabled={true}
 
@@ -121,17 +122,24 @@ Tu veux que je t'aide a interpreter les resultats ?"
 
 ---
 
-## ⚙️ Configuration Jest
+## ⚙️ Configuration Jest pour Next.js
 
 ### jest.config.js
 
+**Next.js 13+ inclut une configuration Jest simplifiee :**
+
 ```javascript
-module.exports = {
-  preset: 'react-native',
+const nextJest = require('next/jest');
+
+const createJestConfig = nextJest({
+  // Provide the path to your Next.js app to load next.config.js and .env files
+  dir: './',
+});
+
+// Custom Jest configuration
+const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|react-native-vector-icons|expo|@expo)/)',
-  ],
+  testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
@@ -141,13 +149,13 @@ module.exports = {
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     '^@theme/(.*)$': '<rootDir>/src/theme/$1',
     '^@store/(.*)$': '<rootDir>/src/store/$1',
-    '^@navigation/(.*)$': '<rootDir>/src/navigation/$1',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/index.{js,ts}',
+    '!src/app/**', // Exclure App Router (teste par Playwright)
   ],
   coverageThreshold: {
     global: {
@@ -157,18 +165,44 @@ module.exports = {
       statements: 70,
     },
   },
+  testMatch: [
+    '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
+    '<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}',
+  ],
 };
+
+// Export config avec Next.js
+module.exports = createJestConfig(customJestConfig);
 ```
 
 ### jest.setup.js
 
 ```javascript
-import '@testing-library/jest-native/extend-expect';
+import '@testing-library/jest-dom';
 
-// Mock AsyncStorage
-jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest/async-storage-mock')
-);
+// Mock Next.js Router
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    pathname: '/',
+    query: {},
+  })),
+  usePathname: jest.fn(() => '/'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  useParams: jest.fn(() => ({})),
+}));
+
+// Mock Next.js Image
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: (props) => {
+    // eslint-disable-next-line jsx-a11y/alt-text
+    return <img {...props} />;
+  },
+}));
 
 // Mock Firebase
 jest.mock('firebase/auth', () => ({
@@ -194,12 +228,20 @@ jest.mock('firebase/firestore', () => ({
   limit: jest.fn(),
 }));
 
-// Mock React Navigation
-jest.mock('@react-navigation/native', () => ({
-  useNavigation: jest.fn(),
-  useRoute: jest.fn(),
-  NavigationContainer: ({ children }) => children,
-}));
+// Mock window.matchMedia (for responsive tests)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 // Silence console errors during tests
 global.console = {
@@ -319,7 +361,7 @@ describe('authService', () => {
  * Tests pour le hook useDebounce.
  */
 
-import { renderHook, act } from '@testing-library/react-native';
+import { renderHook, act } from '@testing-library/react';
 import { useDebounce } from '../useDebounce';
 
 jest.useFakeTimers();
@@ -369,35 +411,38 @@ describe('useDebounce', () => {
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { Button } from '../Button';
 
 describe('Button', () => {
-  it('should render with title', () => {
-    const { getByText } = render(
-      <Button title="Click me" onPress={() => {}} />
-    );
-    expect(getByText('Click me')).toBeTruthy();
+  it('should render with children', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
-  it('should call onPress when pressed', () => {
-    const onPress = jest.fn();
-    const { getByText } = render(
-      <Button title="Click me" onPress={onPress} />
-    );
+  it('should call onClick when clicked', () => {
+    const onClick = jest.fn();
+    render(<Button onClick={onClick}>Click me</Button>);
 
-    fireEvent.press(getByText('Click me'));
-    expect(onPress).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByText('Click me'));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('should not call onPress when disabled', () => {
-    const onPress = jest.fn();
-    const { getByText } = render(
-      <Button title="Click me" onPress={onPress} disabled />
+  it('should not call onClick when disabled', () => {
+    const onClick = jest.fn();
+    render(
+      <Button onClick={onClick} disabled>
+        Click me
+      </Button>
     );
 
-    fireEvent.press(getByText('Click me'));
-    expect(onPress).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Click me'));
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('should show loading spinner when loading', () => {
+    render(<Button loading>Click me</Button>);
+    expect(screen.getByRole('status')).toBeInTheDocument();
   });
 });
 ```
@@ -431,370 +476,415 @@ npm test -- -u
 
 ---
 
-## 🎬 Tests E2E avec Detox
+## 🎬 Tests E2E avec Playwright
 
-### Qu'est-ce que Detox ?
+### Qu'est-ce que Playwright ?
 
-**Detox** est le framework de tests E2E (End-to-End) recommande pour React Native.
-Il permet de tester l'application complete comme un utilisateur reel, en simulant les interactions (taps, swipes, texte) sur un simulateur ou appareil reel.
+**Playwright** est le framework de tests E2E (End-to-End) recommande pour Next.js et applications web.
+Il permet de tester l'application complete comme un utilisateur reel, en automatisant les interactions dans de vrais navigateurs (Chrome, Firefox, Safari).
 
 **Avantages** :
-- Tests sur vrais simulateurs iOS/Android (pas de WebView)
-- Synchronisation automatique avec React Native
-- Execution rapide comparee a Appium
+- Tests multi-navigateurs (Chromium, Firefox, WebKit)
+- Synchronisation automatique avec le DOM
+- Execution rapide et parallelisee
 - Support TypeScript natif
+- Integration parfaite avec Next.js
+- Screenshots et videos automatiques
+- Mode debug interactif
 
-**Quand utiliser Detox** :
+**Quand utiliser Playwright** :
 - Parcours utilisateurs critiques (login, signup, checkout)
 - Tests de regression avant release
 - Validation des flows complets
 - CI/CD pour detecter bugs avant production
+- Tests responsive (desktop, tablet, mobile)
 
 ---
 
-### Installation Detox
+### Installation Playwright
 
-**1. Installer Detox CLI**
-
-```bash
-npm install -g detox-cli
-npm install --save-dev detox jest
-```
-
-**2. Initialiser la configuration**
+**1. Installer Playwright**
 
 ```bash
-detox init
+npm init playwright@latest
 ```
 
-Ceci cree :
-- `.detoxrc.js` (configuration Detox)
-- `e2e/` (dossier pour tests E2E)
+**Questions interactives** :
 
-**3. Configuration `.detoxrc.js`**
-
-```javascript
-/** @type {Detox.DetoxConfig} */
-module.exports = {
-  testRunner: {
-    args: {
-      '$0': 'jest',
-      config: 'e2e/jest.config.js'
-    },
-    jest: {
-      setupTimeout: 120000
-    }
-  },
-  apps: {
-    'ios.debug': {
-      type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/YourApp.app',
-      build: 'xcodebuild -workspace ios/YourApp.xcworkspace -scheme YourApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
-    },
-    'ios.release': {
-      type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/YourApp.app',
-      build: 'xcodebuild -workspace ios/YourApp.xcworkspace -scheme YourApp -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
-    },
-    'android.debug': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
-      build: 'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug'
-    },
-    'android.release': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
-      build: 'cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release'
-    }
-  },
-  devices: {
-    simulator: {
-      type: 'ios.simulator',
-      device: {
-        type: 'iPhone 15 Pro'
-      }
-    },
-    emulator: {
-      type: 'android.emulator',
-      device: {
-        avdName: 'Pixel_5_API_33'
-      }
-    }
-  },
-  configurations: {
-    'ios.sim.debug': {
-      device: 'simulator',
-      app: 'ios.debug'
-    },
-    'ios.sim.release': {
-      device: 'simulator',
-      app: 'ios.release'
-    },
-    'android.emu.debug': {
-      device: 'emulator',
-      app: 'android.debug'
-    },
-    'android.emu.release': {
-      device: 'emulator',
-      app: 'android.release'
-    }
-  }
-};
+```bash
+# Do you want to use TypeScript? → Yes
+# Where to put your end-to-end tests? → e2e
+# Add a GitHub Actions workflow? → Yes
+# Install Playwright browsers? → Yes
 ```
 
-**4. Configuration Jest pour E2E**
+**2. Structure creee**
 
-**e2e/jest.config.js** :
+```
+e2e/
+├── example.spec.ts          # Test exemple
+└── fixtures/                # Donnees de test (optionnel)
 
-```javascript
-module.exports = {
-  rootDir: '..',
-  testMatch: ['<rootDir>/e2e/**/*.test.ts'],
-  testTimeout: 120000,
-  maxWorkers: 1,
-  globalSetup: 'detox/runners/jest/globalSetup',
-  globalTeardown: 'detox/runners/jest/globalTeardown',
-  reporters: ['detox/runners/jest/reporter'],
-  testEnvironment: 'detox/runners/jest/testEnvironment',
-  verbose: true,
-};
+playwright.config.ts         # Configuration Playwright
+.github/workflows/           # CI/CD automatique (si choisi)
+  └── playwright.yml
+```
+
+**3. Configuration `playwright.config.ts`**
+
+```typescript
+import { defineConfig, devices } from '@playwright/test';
+
+/**
+ * Configuration Playwright pour Next.js
+ * Voir: https://playwright.dev/docs/test-configuration
+ */
+export default defineConfig({
+  testDir: './e2e',
+
+  // Timeout par test (30s)
+  timeout: 30 * 1000,
+
+  // Expect timeout (5s)
+  expect: {
+    timeout: 5000,
+  },
+
+  // Retries sur echec (utile pour CI)
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+
+  // Reporter (liste de resultats + HTML report)
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+  ],
+
+  // Options partagees par tous les tests
+  use: {
+    // Base URL de l'app Next.js
+    baseURL: 'http://localhost:3000',
+
+    // Screenshots sur echec
+    screenshot: 'only-on-failure',
+
+    // Videos sur echec
+    video: 'retain-on-failure',
+
+    // Trace (debug detaille) sur echec
+    trace: 'on-first-retry',
+  },
+
+  // Configuration multi-navigateurs
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+    // Tests responsive
+    {
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'Mobile Safari',
+      use: { ...devices['iPhone 13'] },
+    },
+  ],
+
+  // Lancer le serveur Next.js automatiquement avant les tests
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
+});
 ```
 
 ---
 
 ### Ecrire des Tests E2E
 
-#### Structure d'un Test Detox
+#### Structure d'un Test Playwright
 
-**e2e/auth.test.ts** :
+**e2e/auth.spec.ts** :
 
 ```typescript
 /**
- * Fichier: auth.test.ts
+ * Fichier: auth.spec.ts
  *
  * Tests E2E pour l'authentification.
  */
 
-describe('Authentication Flow', () => {
-  beforeAll(async () => {
-    await device.launchApp();
+import { test, expect } from '@playwright/test';
+
+test.describe('Authentication Flow', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
   });
 
-  beforeEach(async () => {
-    await device.reloadReactNative();
+  test('should display welcome screen on first visit', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Bienvenue' })).toBeVisible();
+    await expect(page.getByText(/Connectez-vous/)).toBeVisible();
   });
 
-  it('should display welcome screen on first launch', async () => {
-    await expect(element(by.id('welcome-screen'))).toBeVisible();
-    await expect(element(by.text('Bienvenue'))).toBeVisible();
-  });
-
-  it('should login with valid credentials', async () => {
+  test('should login with valid credentials', async ({ page }) => {
     // Navigation vers login
-    await element(by.id('login-button')).tap();
+    await page.getByRole('link', { name: 'Se connecter' }).click();
 
     // Remplir formulaire
-    await element(by.id('email-input')).typeText('test@example.com');
-    await element(by.id('password-input')).typeText('password123');
+    await page.getByLabel('Email').fill('test@example.com');
+    await page.getByLabel('Mot de passe').fill('password123');
 
     // Soumettre
-    await element(by.id('submit-button')).tap();
+    await page.getByRole('button', { name: 'Se connecter' }).click();
 
-    // Verifier redirection vers home
-    await waitFor(element(by.id('home-screen')))
-      .toBeVisible()
-      .withTimeout(5000);
+    // Verifier redirection vers dashboard
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
   });
 
-  it('should show error for invalid credentials', async () => {
-    await element(by.id('login-button')).tap();
+  test('should show error for invalid credentials', async ({ page }) => {
+    await page.goto('/login');
 
-    await element(by.id('email-input')).typeText('wrong@example.com');
-    await element(by.id('password-input')).typeText('wrongpassword');
+    await page.getByLabel('Email').fill('wrong@example.com');
+    await page.getByLabel('Mot de passe').fill('wrongpassword');
 
-    await element(by.id('submit-button')).tap();
+    await page.getByRole('button', { name: 'Se connecter' }).click();
 
     // Verifier message d'erreur
-    await expect(element(by.text('Identifiants invalides'))).toBeVisible();
+    await expect(page.getByText('Identifiants invalides')).toBeVisible();
+    await expect(page).toHaveURL('/login'); // Reste sur login
   });
 
-  it('should register new user', async () => {
-    await element(by.id('register-button')).tap();
+  test('should register new user', async ({ page }) => {
+    await page.goto('/register');
 
-    await element(by.id('name-input')).typeText('John Doe');
-    await element(by.id('email-input')).typeText('john@example.com');
-    await element(by.id('password-input')).typeText('password123');
-    await element(by.id('confirm-password-input')).typeText('password123');
+    await page.getByLabel('Nom').fill('John Doe');
+    await page.getByLabel('Email').fill('john@example.com');
+    await page.getByLabel('Mot de passe').fill('password123');
+    await page.getByLabel('Confirmer mot de passe').fill('password123');
 
-    await element(by.id('register-submit-button')).tap();
+    await page.getByRole('button', { name: 'S\'inscrire' }).click();
 
-    // Verifier redirection vers home
-    await waitFor(element(by.id('home-screen')))
-      .toBeVisible()
-      .withTimeout(5000);
+    // Verifier redirection vers dashboard
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByText('Bienvenue John Doe')).toBeVisible();
   });
 });
 ```
 
 ---
 
-### Selecteurs Detox
+### Selecteurs Playwright
 
-**Identifiants testID recommandes** :
-
-```typescript
-// Ajouter testID aux composants React Native
-<View testID="welcome-screen">
-  <Text testID="welcome-title">Bienvenue</Text>
-  <TouchableOpacity testID="login-button" onPress={handleLogin}>
-    <Text>Se connecter</Text>
-  </TouchableOpacity>
-</View>
-```
-
-**Types de selecteurs** :
+**Selecteurs recommandes (par priorite)** :
 
 ```typescript
-// Par testID (RECOMMANDE)
-element(by.id('login-button'))
+// 1. Par role (RECOMMANDE - accessibilite)
+page.getByRole('button', { name: 'Se connecter' })
+page.getByRole('heading', { name: 'Bienvenue' })
+page.getByRole('textbox', { name: 'Email' })
+page.getByRole('link', { name: 'Accueil' })
 
-// Par texte
-element(by.text('Se connecter'))
+// 2. Par label (formulaires)
+page.getByLabel('Email')
+page.getByLabel('Mot de passe')
 
-// Par label (accessibilite)
-element(by.label('Bouton de connexion'))
+// 3. Par texte
+page.getByText('Bienvenue')
+page.getByText(/Bienvenue.*/)  // Regex
 
-// Par type
-element(by.type('RCTTextInput'))
+// 4. Par placeholder
+page.getByPlaceholder('Entrez votre email')
+
+// 5. Par data-testid (dernier recours)
+page.getByTestId('login-button')
+
+// Selecteurs CSS/XPath (eviter si possible)
+page.locator('button.primary')
+page.locator('xpath=//button[@type="submit"]')
 
 // Combinaisons
-element(by.id('user-list').and(by.text('John Doe')))
-
-// Elements parents/enfants
-element(by.id('parent')).atIndex(0)
+page.getByRole('button').filter({ hasText: 'Envoyer' })
+page.locator('form').getByRole('button')
 ```
 
 ---
 
-### Actions Detox
+### Actions Playwright
 
 ```typescript
-// Tap
-await element(by.id('button')).tap();
+// Click
+await page.getByRole('button', { name: 'Submit' }).click();
 
-// Multiple taps
-await element(by.id('button')).multiTap(3);
+// Double click
+await page.getByRole('button').dblclick();
 
-// Long press
-await element(by.id('button')).longPress();
+// Right click
+await page.getByRole('button').click({ button: 'right' });
 
 // Saisir du texte
-await element(by.id('input')).typeText('Hello');
+await page.getByLabel('Email').fill('test@example.com');
+await page.getByLabel('Email').type('test@example.com', { delay: 100 });
 
-// Remplacer texte
-await element(by.id('input')).replaceText('New text');
+// Clear input
+await page.getByLabel('Email').clear();
 
-// Clear texte
-await element(by.id('input')).clearText();
+// Presser des touches
+await page.getByLabel('Search').press('Enter');
+await page.keyboard.press('Control+A');
+
+// Hover
+await page.getByRole('button').hover();
 
 // Scroll
-await element(by.id('scrollview')).scroll(100, 'down');
-await element(by.id('scrollview')).scrollTo('bottom');
+await page.getByRole('article').scrollIntoViewIfNeeded();
+await page.mouse.wheel(0, 100);
 
-// Swipe
-await element(by.id('card')).swipe('left');
-await element(by.id('card')).swipe('right', 'fast', 0.8);
+// Upload fichier
+await page.getByLabel('Upload').setInputFiles('path/to/file.pdf');
+
+// Select (dropdown)
+await page.getByLabel('Country').selectOption('France');
+
+// Checkbox / Radio
+await page.getByLabel('Accept terms').check();
+await page.getByLabel('Refuse').uncheck();
 ```
 
 ---
 
-### Assertions Detox
+### Assertions Playwright
 
 ```typescript
 // Visibilite
-await expect(element(by.id('element'))).toBeVisible();
-await expect(element(by.id('element'))).toBeNotVisible();
+await expect(page.getByRole('button')).toBeVisible();
+await expect(page.getByRole('button')).toBeHidden();
 
-// Existence (dans le DOM meme si invisible)
-await expect(element(by.id('element'))).toExist();
-await expect(element(by.id('element'))).toNotExist();
+// Existence dans le DOM
+await expect(page.getByRole('button')).toBeAttached();
+await expect(page.getByRole('button')).not.toBeAttached();
 
 // Texte
-await expect(element(by.id('label'))).toHaveText('Hello');
+await expect(page.getByRole('heading')).toHaveText('Hello');
+await expect(page.getByRole('heading')).toContainText('Hello');
 
 // Valeur (input)
-await expect(element(by.id('input'))).toHaveValue('text');
+await expect(page.getByLabel('Email')).toHaveValue('test@example.com');
 
-// Focus
-await expect(element(by.id('input'))).toBeFocused();
-await expect(element(by.id('input'))).toBeNotFocused();
+// Attributs
+await expect(page.getByRole('button')).toBeDisabled();
+await expect(page.getByRole('button')).toBeEnabled();
+await expect(page.getByRole('checkbox')).toBeChecked();
+await expect(page.getByRole('link')).toHaveAttribute('href', '/about');
+
+// URL
+await expect(page).toHaveURL('http://localhost:3000/dashboard');
+await expect(page).toHaveURL(/dashboard/);
+
+// Title
+await expect(page).toHaveTitle('Dashboard - MyApp');
+
+// Screenshot comparison (visual regression)
+await expect(page).toHaveScreenshot('homepage.png');
+
+// Count
+await expect(page.getByRole('listitem')).toHaveCount(5);
+
+// CSS
+await expect(page.getByRole('button')).toHaveCSS('color', 'rgb(255, 0, 0)');
 ```
 
 ---
 
-### Attentes et Timeouts
+### Attentes et Auto-waiting
+
+**Playwright attend automatiquement** que les elements soient prets (visible, enabled, stable).
 
 ```typescript
-// Attendre qu'un element apparaisse
-await waitFor(element(by.id('element')))
-  .toBeVisible()
-  .withTimeout(5000);
+// Pas besoin d'attentes manuelles - Playwright attend automatiquement
+await page.getByRole('button').click();
+// ✓ Attend que le bouton existe
+// ✓ Attend que le bouton soit visible
+// ✓ Attend que le bouton soit enabled
+// ✓ Attend que le bouton soit stable (pas d'animation)
 
-// Attendre qu'un element disparaisse
-await waitFor(element(by.id('loading')))
-  .toBeNotVisible()
-  .withTimeout(10000);
+// Attente explicite (rarement necessaire)
+await page.waitForLoadState('networkidle');
+await page.waitForURL('/dashboard');
+await page.waitForSelector('.item', { state: 'visible' });
 
-// Condition while
-await waitFor(element(by.id('message')))
-  .toBeVisible()
-  .whileElement(by.id('scrollview'))
-  .scroll(50, 'down');
+// Attendre condition custom
+await page.waitForFunction(() => {
+  return document.querySelectorAll('.item').length > 5;
+});
+
+// Timeout custom (defaut: 30s)
+await expect(page.getByText('Loading...')).toBeHidden({ timeout: 10000 });
 ```
 
 ---
 
 ### Lancer les Tests E2E
 
-**1. Build l'app pour tests**
+**1. Lancer tous les tests**
 
 ```bash
-# iOS Debug
-detox build --configuration ios.sim.debug
-
-# Android Debug
-detox build --configuration android.emu.debug
+npx playwright test
 ```
 
-**2. Lancer les tests**
+Playwright lance automatiquement le serveur Next.js (`npm run dev`), execute les tests sur tous les navigateurs configures, puis stoppe le serveur.
+
+**2. Lancer des tests specifiques**
 
 ```bash
-# iOS
-detox test --configuration ios.sim.debug
+# Un fichier specifique
+npx playwright test e2e/auth.spec.ts
 
-# Android
-detox test --configuration android.emu.debug
+# Un navigateur specifique
+npx playwright test --project=chromium
 
-# Lancer un fichier specifique
-detox test e2e/auth.test.ts --configuration ios.sim.debug
+# Mode headed (voir navigateur)
+npx playwright test --headed
 
-# Mode debug (avec logs detailles)
-detox test --configuration ios.sim.debug --loglevel trace
+# Mode debug (step-by-step avec Playwright Inspector)
+npx playwright test --debug
 
-# Re-run failed tests uniquement
-detox test --configuration ios.sim.debug --reuse
+# Lancer tests qui matchent un pattern
+npx playwright test -g "login"
 ```
 
-**3. Mode watch (developpement)**
+**3. Mode UI (interface visuelle interactive)**
 
 ```bash
-# Lancer l'app sans tests
-detox build --configuration ios.sim.debug
-detox test --configuration ios.sim.debug --debug-synchronization 500
-
-# Dans un autre terminal, lancer tests en watch
-npm run test:e2e:watch
+npx playwright test --ui
 ```
+
+Interface graphique qui permet de :
+- Voir tous les tests en temps reel
+- Voir traces et screenshots
+- Re-run tests en un clic
+- Time travel dans l'execution
+
+**4. Mode watch (developpement)**
+
+```bash
+npx playwright test --watch
+```
+
+Re-lance automatiquement les tests quand les fichiers changent.
 
 ---
 
@@ -803,115 +893,170 @@ npm run test:e2e:watch
 #### Navigation Complete
 
 ```typescript
-describe('Navigation Flow', () => {
-  it('should navigate through all tabs', async () => {
-    await device.launchApp();
+test('should navigate through all pages', async ({ page }) => {
+  await page.goto('/');
 
-    // Tab Home
-    await expect(element(by.id('home-screen'))).toBeVisible();
+  // Page accueil
+  await expect(page).toHaveURL('/');
+  await expect(page.getByRole('heading', { name: 'Accueil' })).toBeVisible();
 
-    // Tab Recherche
-    await element(by.id('tab-search')).tap();
-    await expect(element(by.id('search-screen'))).toBeVisible();
+  // Page recherche
+  await page.getByRole('link', { name: 'Recherche' }).click();
+  await expect(page).toHaveURL('/search');
+  await expect(page.getByRole('heading', { name: 'Recherche' })).toBeVisible();
 
-    // Tab Profil
-    await element(by.id('tab-profile')).tap();
-    await expect(element(by.id('profile-screen'))).toBeVisible();
-  });
+  // Page profil
+  await page.getByRole('link', { name: 'Profil' }).click();
+  await expect(page).toHaveURL('/profile');
+  await expect(page.getByRole('heading', { name: 'Profil' })).toBeVisible();
 });
 ```
 
 #### Scroll et Liste Infinie
 
 ```typescript
-it('should load more items on scroll', async () => {
-  await element(by.id('list')).scrollTo('bottom');
+test('should load more items on scroll', async ({ page }) => {
+  await page.goto('/posts');
 
-  await waitFor(element(by.id('loading-more')))
-    .toBeVisible()
-    .withTimeout(2000);
+  // Scroll jusqu'au bas
+  await page.getByRole('article').last().scrollIntoViewIfNeeded();
 
-  await waitFor(element(by.id('item-21')))
-    .toBeVisible()
-    .whileElement(by.id('list'))
-    .scroll(100, 'down');
+  // Verifier que le loading apparait
+  await expect(page.getByText('Chargement...')).toBeVisible();
+
+  // Attendre nouveaux items
+  await expect(page.getByRole('article')).toHaveCount(30, { timeout: 5000 });
 });
 ```
 
-#### Gestion Permissions
+#### Test de Formulaire avec Validation
 
 ```typescript
-it('should request camera permission', async () => {
-  await element(by.id('take-photo-button')).tap();
+test('should validate form fields', async ({ page }) => {
+  await page.goto('/contact');
 
-  // iOS : Autoriser l'acces a la camera
-  await device.launchApp({
-    permissions: { camera: 'YES' }
-  });
+  // Soumettre formulaire vide
+  await page.getByRole('button', { name: 'Envoyer' }).click();
 
-  await expect(element(by.id('camera-view'))).toBeVisible();
+  // Verifier erreurs de validation
+  await expect(page.getByText('Email requis')).toBeVisible();
+  await expect(page.getByText('Message requis')).toBeVisible();
+
+  // Remplir avec donnees invalides
+  await page.getByLabel('Email').fill('invalid-email');
+  await page.getByRole('button', { name: 'Envoyer' }).click();
+  await expect(page.getByText('Email invalide')).toBeVisible();
+
+  // Remplir correctement
+  await page.getByLabel('Email').fill('test@example.com');
+  await page.getByLabel('Message').fill('Hello world');
+  await page.getByRole('button', { name: 'Envoyer' }).click();
+
+  // Verifier succes
+  await expect(page.getByText('Message envoye avec succes')).toBeVisible();
 });
 ```
 
-#### Deep Links
+#### Intercepter Requetes API (Mock)
 
 ```typescript
-it('should open app from deep link', async () => {
-  await device.launchApp({
-    url: 'myapp://product/123'
+test('should display posts from API', async ({ page }) => {
+  // Intercepter appel API et retourner donnees mockees
+  await page.route('**/api/posts', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        { id: 1, title: 'Post 1', content: 'Content 1' },
+        { id: 2, title: 'Post 2', content: 'Content 2' },
+      ]),
+    });
   });
 
-  await expect(element(by.id('product-screen'))).toBeVisible();
-  await expect(element(by.id('product-title'))).toHaveText('Product 123');
+  await page.goto('/posts');
+
+  // Verifier que les posts mockees s'affichent
+  await expect(page.getByText('Post 1')).toBeVisible();
+  await expect(page.getByText('Post 2')).toBeVisible();
+});
+```
+
+#### Test de geolocalisation
+
+```typescript
+test('should use user location', async ({ page, context }) => {
+  // Simuler geolocalisation Paris
+  await context.setGeolocation({ latitude: 48.8566, longitude: 2.3522 });
+  await context.grantPermissions(['geolocation']);
+
+  await page.goto('/map');
+
+  // Verifier que la carte centre sur Paris
+  await expect(page.getByText('Paris, France')).toBeVisible();
 });
 ```
 
 ---
 
-### Bonnes Pratiques Detox
+### Bonnes Pratiques Playwright
 
-1. **Utiliser testID partout** : Ajouter systematiquement `testID` aux elements interactifs
-2. **Tests independants** : Chaque test doit pouvoir s'executer seul (beforeEach pour reset)
-3. **Attendre explicitement** : Toujours utiliser `waitFor` pour elements asynchrones
-4. **Eviter les sleeps** : `await new Promise(resolve => setTimeout(resolve, 1000))` = ❌
-5. **Mock les APIs** : Utiliser Detox server mock ou MSW pour APIs externes
+1. **Utiliser roles ARIA** : Preferer `getByRole()` pour accessibilite
+2. **Tests independants** : Chaque test doit pouvoir s'executer seul
+3. **Auto-waiting** : Faire confiance au auto-waiting de Playwright
+4. **Eviter les sleeps** : `await page.waitForTimeout(1000)` = ❌
+5. **Mock les APIs** : Utiliser `page.route()` pour mocker les appels API
 6. **Nommer clairement** : `should login with valid credentials` > `test login`
 7. **Tests critiques seulement** : E2E = lent, donc tester uniquement parcours essentiels
-8. **CI/CD optimisation** : Utiliser `--reuse` pour accelerer, paralleliser si possible
+8. **Parallelisation** : Activer `fullyParallel: true` dans config
 
 ---
 
-### Debugging Detox
+### Debugging Playwright
 
 **Problemes courants** :
 
 ```bash
 # Element non trouve
-# → Verifier testID, utiliser waitFor, checker hierarchie
+# → Verifier selecteur, utiliser Playwright Inspector (--debug)
 
-# Synchronisation (app ne repond pas)
-detox test --debug-synchronization 200
-# → Augmenter timeout, checker animations infinies
+# Timeout
+# → Augmenter timeout, verifier que l'element devient visible
 
-# Build echoue
-# → Clean :
-rm -rf ios/build android/app/build
-detox clean-framework-cache && detox build-framework-cache
+# Flaky tests
+# → Utiliser auto-waiting, eviter attentes manuelles
+# → Activer retries dans config
 
-# Simulateur crash
-# → Reset simulateur :
-xcrun simctl erase all  # iOS
-emulator -avd Pixel_5_API_33 -wipe-data  # Android
+# Test echoue sur CI mais pas en local
+# → Verifier differences environnement (timezone, viewport, etc.)
 ```
 
-**Logs detailles** :
+**Debugging interactif** :
 
 ```bash
-# Activer logs complets
-detox test --loglevel trace --record-logs all
+# Playwright Inspector (step-by-step)
+npx playwright test --debug
 
-# Screenshots sur echec
-detox test --take-screenshots failing
+# Mode headed (voir navigateur)
+npx playwright test --headed
+
+# Mode UI (interface graphique)
+npx playwright test --ui
+
+# Pause dans le test
+await page.pause();
+
+# Console logs du navigateur
+page.on('console', (msg) => console.log(msg.text()));
+```
+
+**Voir rapport HTML** :
+
+```bash
+# Generer rapport
+npx playwright test --reporter=html
+
+# Ouvrir rapport
+npx playwright show-report
 ```
 
 ---
@@ -921,12 +1066,14 @@ detox test --take-screenshots failing
 ```json
 {
   "scripts": {
-    "detox:build:ios": "detox build --configuration ios.sim.debug",
-    "detox:test:ios": "detox test --configuration ios.sim.debug",
-    "detox:build:android": "detox build --configuration android.emu.debug",
-    "detox:test:android": "detox test --configuration android.emu.debug",
-    "detox:test:ios:watch": "detox test --configuration ios.sim.debug --watch",
-    "detox:clean": "detox clean-framework-cache && detox build-framework-cache"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   }
 }
 ```
@@ -944,4 +1091,4 @@ detox test --take-screenshots failing
 
 ---
 
-🤖 _Guide destine a Claude Code - Tests guides par Claude, executes par le dev_
+🤖 _Guide destine a Claude Code - Tests Next.js avec Jest et Playwright_
