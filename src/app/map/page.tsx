@@ -107,18 +107,20 @@ export default function MapPage() {
         <MapView clubs={MOCK_CLUBS} />
 
         {/* Legende */}
-        <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
+        <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-xs z-[1000]">
           <h2 className="font-bold text-gray-900 mb-2">🗺️ Carte des clubs</h2>
           <p className="text-sm text-gray-600 mb-3">
             Explorez {MOCK_CLUBS.length} clubs sportifs en France
           </p>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>
-            <span>Clubs sportifs</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
-            <span>Votre position</span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span className="text-xl">⚽🎾🏀</span>
+              <span>Clubs sportifs</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span className="inline-block w-3 h-3 rounded-full bg-blue-600"></span>
+              <span>Votre position</span>
+            </div>
           </div>
         </div>
 

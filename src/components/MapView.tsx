@@ -102,15 +102,39 @@ export const MapView: React.FC<MapViewProps> = ({
   zoom = 6,
   clubs = [],
 }) => {
-  // Icone personnalisee pour les clubs
-  const clubIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
+  // Fonction pour obtenir l'emoji selon le sport
+  const getSportEmoji = (sport: string): string => {
+    const sportEmojis: { [key: string]: string } = {
+      'Football': '⚽',
+      'Tennis': '🎾',
+      'Basketball': '🏀',
+      'Natation': '🏊',
+      'Volleyball': '🏐',
+      'Rugby': '🏉',
+      'Handball': '🤾',
+      'Cyclisme': '🚴',
+      'Athletisme': '🏃',
+      'Escalade': '🧗',
+      'Boxe': '🥊',
+      'Judo': '🥋',
+      'Equitation': '🏇',
+      'Golf': '⛳',
+      'Ski': '⛷️',
+    };
+    return sportEmojis[sport] || '🏅'; // 🏅 par defaut
+  };
+
+  // Fonction pour creer un marker avec emoji
+  const createEmojiIcon = (sport: string) => {
+    const emoji = getSportEmoji(sport);
+    return new L.DivIcon({
+      html: `<div style="font-size: 32px; text-align: center; line-height: 1;">${emoji}</div>`,
+      className: 'custom-emoji-icon',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
+  };
 
   return (
     <div className="relative h-full w-full">
@@ -130,15 +154,16 @@ export const MapView: React.FC<MapViewProps> = ({
         {/* Marker position utilisateur + bouton recentrage */}
         <UserLocationMarker />
 
-        {/* Markers des clubs */}
+        {/* Markers des clubs avec emojis */}
         {clubs.map((club) => (
           <Marker
             key={club.id}
             position={[club.lat, club.lng]}
-            icon={clubIcon}
+            icon={createEmojiIcon(club.sport)}
           >
             <Popup>
               <div className="text-center">
+                <div className="text-3xl mb-2">{getSportEmoji(club.sport)}</div>
                 <strong className="text-lg">{club.name}</strong>
                 <p className="text-gray-600 text-sm mt-1">{club.sport}</p>
               </div>
