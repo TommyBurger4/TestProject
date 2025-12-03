@@ -100,17 +100,17 @@ export default function MapPage() {
 
           {user ? (
             <Link
-              href="/profile"
+              href="/dashboard"
               className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors font-semibold"
             >
-              Mon profil
+              Mon Dashboard
             </Link>
           ) : (
             <Link
               href="/login"
               className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors font-semibold"
             >
-              Se connecter
+              Espace Club
             </Link>
           )}
         </div>
