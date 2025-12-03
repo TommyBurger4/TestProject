@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+/* Variables CSS personnalisees pour ClubSportFrance */
+:root {
+  /* Couleurs principales */
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --secondary: #10b981;
+  --error: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Couleurs de surface */
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --disabled: #f3f4f6;
+
+  /* Couleurs de texte */
+  --text: #171717;
+  --text-secondary: #6b7280;
+  --text-on-primary: #ffffff;
+}
+
+@theme inline {
+  /* Couleurs Tailwind */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-error: var(--error);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-disabled: var(--disabled);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-on-primary: var(--text-on-primary);
+
+  /* Spacing personnalise */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+
+  /* Border radius */
+  --radius-sm: 0.25rem;     /* 4px */
+  --radius-md: 0.5rem;      /* 8px */
+  --radius-lg: 0.75rem;     /* 12px */
+  --radius-xl: 1rem;        /* 16px */
+  --radius-full: 9999px;
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Mode sombre */
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --secondary: #10b981;
+    --error: #ef4444;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+
+    --surface: #1f2937;
+    --border: #374151;
+    --disabled: #374151;
+
+    --text: #ededed;
+    --text-secondary: #9ca3af;
+    --text-on-primary: #ffffff;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix retours a la ligne automatiques */
+* {
+  word-wrap: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* Styles pour les markers emoji Leaflet */
+.custom-emoji-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Pin marker personnalise avec emoji */
+.custom-marker-pin {
+  width: 40px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forme du pin (goutte) */
+.custom-marker-pin::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #ef4444;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 3px solid white;
+  z-index: 1;
+}
+
+/* Emoji dans le pin */
+.pin-emoji {
+  position: relative;
+  z-index: 2;
+  font-size: 20px;
+  transform: translateY(0px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Marker utilisateur (bleu) */
+.user-marker::before {
+  background: #3b82f6 !important;
+}
+
+/* === Styles pour les clusters de markers === */
+
+.custom-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.cluster-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+  color: white !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  border: 3px solid white !important;
+  transition: transform 0.2s ease !important;
+}
+
+.cluster-icon:hover {
+  transform: scale(1.1) !important;
+}
+
+/* Cluster petit (< 50 clubs) - Bleu semi-transparent 50% */
+.cluster-small {
+  background: rgba(59, 130, 246, 0.5) !important;
+  font-size: 14px !important;
+}
+
+/* Cluster moyen (50-99 clubs) - Orange semi-transparent 50% */
+.cluster-medium {
+  background: rgba(245, 158, 11, 0.5) !important;
+  font-size: 16px !important;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+/* Cluster grand (100+ clubs) - Rouge semi-transparent 50% */
+.cluster-large {
+  background: rgba(239, 68, 68, 0.5) !important;
+  font-size: 18px !important;
+  width: 60px !important;
+  height: 60px !important;
+}

@@ -1,0 +1,62 @@
+rules_version = '2';
+
+/**
+ * Regles de securite Firebase Storage - ClubSportFrance
+ *
+ * IMPORTANT: Ces regles suivent une approche reactive.
+ * Elles sont generees progressivement au fur et a mesure
+ * que de nouvelles features sont ajoutees.
+ *
+ * Phase 2: Services & Authentification
+ * - users/{userId}/profile/ (photos de profil)
+ */
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // === Helper Functions ===
+
+    // Verifie si l'utilisateur est authentifie
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Verifie si l'utilisateur est le proprietaire
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Verifie que le fichier est une image
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // Verifie la taille du fichier (max 5MB)
+    function isValidSize() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // === users/{userId}/profile/ ===
+    // Photos de profil utilisateurs
+
+    match /users/{userId}/profile/{imageId} {
+      // Lecture: Autorisee pour tous les utilisateurs authentifies
+      allow read: if isSignedIn();
+
+      // Ecriture: Autorisee uniquement pour le proprietaire
+      // avec validation du type et de la taille
+      allow write: if isOwner(userId)
+                   && isImage()
+                   && isValidSize();
+
+      // Suppression: Autorisee uniquement pour le proprietaire
+      allow delete: if isOwner(userId);
+    }
+
+    // === Default Rule ===
+    // Par defaut, tout acces est refuse
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
