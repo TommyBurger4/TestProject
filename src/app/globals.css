@@ -128,7 +128,7 @@ body {
   position: relative;
   z-index: 2;
   font-size: 20px;
-  transform: translateY(-5px);
+  transform: translateY(0px);
   display: flex;
   align-items: center;
   justify-content: center;
