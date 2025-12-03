@@ -1,6 +1,6 @@
 # 🎯 RÈGLES D'OR POUR CLAUDE CODE
 
-> **Guide des principes fondamentaux à suivre pour TOUS les projets Next.js**
+> **Guide des principes fondamentaux à suivre pour TOUS les projets React Native/Expo**
 
 ---
 
@@ -51,8 +51,8 @@ const estAuthentifie = true;
 Claude: "Je vais creer le systeme d'authentification complet :
 - AuthContext.tsx
 - authService.ts
-- page /login
-- page /register
+- LoginScreen.tsx
+- RegisterScreen.tsx
 Es-tu d'accord ?"
 
 Dev: "Oui"
@@ -77,16 +77,16 @@ Claude: [commence à coder directement sans demander]
 ```
 Claude: "J'ai termine l'implementation de l'authentification.
 Fichiers modifies :
-- app/login/page.tsx (nouveau)
-- services/authService.ts (nouveau)
-- contexts/AuthContext.tsx (nouveau)
+- src/features/auth/AuthContext.tsx (nouveau)
+- src/features/auth/authService.ts (nouveau)
+- src/features/auth/screens/LoginScreen.tsx (nouveau)
 
 Message de commit propose :
 feat(auth): implement complete authentication system
 
 - Add AuthContext with login/logout
 - Add authService with Firebase integration
-- Create login page with email/password
+- Create LoginScreen with email/password
 
 Veux-tu que je cree ce commit ?"
 
@@ -130,7 +130,7 @@ Claude: [crée le commit]
 2. Qualité du code (lisible, maintenable, DRY)
 3. Documentation (commentaires, README, PROJECT.md)
 4. Tests (au moins pour la logique critique)
-5. Performance (SSR, ISR, optimisations raisonnables)
+5. Performance (optimisations raisonnables)
 6. Vitesse de développement
 
 **Mieux vaut poser une question que faire une mauvaise hypothèse**
@@ -141,22 +141,22 @@ Claude: [crée le commit]
 
 ### Technologies Obligatoires
 
-- **Framework :** Next.js 14+ (App Router)
+- **Framework :** React Native + Expo (v54+)
 - **Langage :** TypeScript (strict mode)
 - **Backend :** Firebase (Auth, Firestore, Storage, Analytics, Cloud Functions)
 - **State Management :** Zustand (global) + Context API (features spécifiques)
-- **Routing :** Next.js App Router (file-based routing)
-- **Styling :** Tailwind CSS + theme system
-- **i18n :** next-intl (multi-langue OBLIGATOIRE)
-- **Tests :** Jest + React Testing Library
-- **Deployment :** Vercel (recommandé) ou Firebase Hosting
-- **Versioning :** Semantic Versioning (MAJOR.MINOR.PATCH)
+- **Navigation :** React Navigation v7
+- **Styling :** StyleSheet natif + theme system
+- **i18n :** expo-localization + i18n-js (multi-langue OBLIGATOIRE)
+- **Tests :** Jest + React Native Testing Library
+- **CI/CD :** EAS Build & Submit
+- **Versioning :** Semantic Versioning (MAJOR.MINOR.PATCH) + Build numbers
 
 ### Technologies Conditionnelles (selon onboarding)
 
-- **Stripe** : Si abonnements/achats
-- **Google Maps JavaScript API** : Si géolocalisation/cartes
-- **Web Push API** : Si notifications push navigateur
+- **RevenueCat** : Si abonnements/achats in-app
+- **React Native Maps** : Si géolocalisation/cartes
+- **Expo Notifications** : Si notifications push
 - **Algolia** : Si recherche full-text avancée
 - **Mixpanel/Amplitude** : Si analytics avancés
 - **Sentry** : Si monitoring erreurs production
@@ -175,7 +175,7 @@ Claude: [crée le commit]
 6. **Ignorer les erreurs TypeScript** (strict mode obligatoire)
 7. **Oublier de mettre à jour PROJECT.md**
 8. **Créer du code sans tests** (pour logique critique)
-9. **Hardcoder des valeurs** (toujours utiliser .env.local ou constants)
+9. **Hardcoder des valeurs** (toujours utiliser .env ou constants)
 10. **Merge sans review** (au moins 1 approbation)
 
 ---
@@ -191,7 +191,7 @@ Claude: [crée le commit]
 5. **Commenter en français SANS accents**
 6. **Utiliser TypeScript strict mode**
 7. **Valider les inputs utilisateur** (côté client ET serveur)
-8. **Gérer les erreurs proprement** (try/catch, Error Boundary)
+8. **Gérer les erreurs proprement** (try/catch, ErrorBoundary)
 9. **Suivre les conventions de commit** (feat, fix, docs, etc.)
 10. **Proposer des tests manuels** au dev après chaque feature
 
@@ -201,38 +201,70 @@ Claude: [crée le commit]
 
 **REGLE ABSOLUE : Toute interface DOIT etre responsive**
 
-### Principe Mobile-First ou Desktop-First
+### Principe Mobile-First
 
-**Adapter selon priorité définie en onboarding**
+**Toujours concevoir pour mobile d'abord, puis adapter pour tablette/desktop**
 
 ```typescript
-// ✅ BON : Adaptatif selon taille ecran avec Tailwind
-<div className="p-4 md:p-8 lg:p-12">
-  <h1 className="text-2xl md:text-4xl lg:text-5xl">Titre</h1>
-</div>
+// ✅ BON : Adaptatif selon taille ecran
+const styles = StyleSheet.create({
+  container: {
+    padding: isTablet ? 24 : 16,
+    maxWidth: isDesktop ? 1200 : '100%',
+  },
+  grid: {
+    flexDirection: isTablet ? 'row' : 'column',
+  },
+});
 
 // ❌ MAUVAIS : Taille fixe
-<div style={{ width: 1200 }}>
-  <h1 style={{ fontSize: 48 }}>Titre</h1>
-</div>
+const styles = StyleSheet.create({
+  container: {
+    width: 375, // Taille iPhone uniquement !
+  },
+});
 ```
 
-### Breakpoints Standards Tailwind
+### Tester sur Differentes Tailles
+
+**TOUJOURS verifier sur minimum 3 tailles :**
+- 📱 Phone (375x667 - iPhone SE)
+- 📱 Phone Large (414x896 - iPhone 15 Pro Max)
+- 📱 Tablet (768x1024 - iPad)
+- 💻 Desktop (1920x1080 - si React Native Web)
+
+### APIs React Native pour Responsive
 
 ```typescript
-// Breakpoints Tailwind par defaut
-sm: 640px   // Small devices (phones)
-md: 768px   // Medium devices (tablets)
-lg: 1024px  // Large devices (desktops)
-xl: 1280px  // Extra large devices
-2xl: 1536px // 2X Extra large devices
+import { Dimensions, useWindowDimensions } from 'react-native';
+
+// Hook recommande (re-render automatique)
+const { width, height } = useWindowDimensions();
+
+// API statique (ne re-render PAS)
+const { width, height } = Dimensions.get('window');
+```
+
+### Breakpoints Standards
+
+```typescript
+const BREAKPOINTS = {
+  phone: 0,
+  tablet: 768,
+  desktop: 1024,
+};
+
+const isTablet = width >= BREAKPOINTS.tablet;
+const isDesktop = width >= BREAKPOINTS.desktop;
 ```
 
 **Regle d'Or** :
-- ❌ JAMAIS de `width: 300px` ou `height: 500px` en dur
-- ✅ TOUJOURS utiliser Tailwind responsive classes
+- ❌ JAMAIS de `width: 300` ou `height: 500` en dur
+- ✅ TOUJOURS utiliser `useWindowDimensions` ou `Dimensions`
 - ✅ TOUJOURS tester sur plusieurs tailles d'ecran
-- ✅ Utiliser `flexbox` et `grid` pour layouts adaptatifs
+- ✅ Utiliser `flexbox` pour layouts adaptatifs
+
+**Voir guide complet : 05_ARCHITECTURE.md section Responsive Design**
 
 ---
 
@@ -272,18 +304,18 @@ xl: 1280px  // Extra large devices
    ```typescript
    // ✅ BON
    {error && (
-     <div>
-       <p>{errorMessage}</p>
-       <button onClick={retry}>Reessayer</button>
-     </div>
+     <View>
+       <Text>{errorMessage}</Text>
+       <Button title="Reessayer" onPress={retry} />
+     </View>
    )}
    ```
 
-4. **Utiliser Error Boundary pour les erreurs React**
+4. **Utiliser ErrorBoundary pour les erreurs React**
    ```typescript
-   // app/layout.tsx
+   // App.tsx
    <ErrorBoundary>
-     {children}
+     <AppNavigator />
    </ErrorBoundary>
    ```
 
@@ -292,8 +324,10 @@ xl: 1280px  // Extra large devices
 - ✅ TOUJOURS messages d'erreur en francais
 - ✅ TOUJOURS proposer un bouton "Reessayer"
 - ✅ TOUJOURS logger les erreurs (console ou Sentry)
-- ❌ JAMAIS laisser une erreur crasher le site
+- ❌ JAMAIS laisser une erreur crasher l'app
 - ❌ JAMAIS afficher les codes erreur techniques a l'utilisateur
+
+**Voir guide complet : 05_ARCHITECTURE.md section Error Handling**
 
 ---
 
@@ -324,14 +358,15 @@ const isValid = user?.profile?.settings?.notifications?.enabled ?? false;
 ### Separation of Concerns
 ```
 // ✅ BON
-app/                   # Pages Next.js (routing)
-├── components/        # UI reutilisable
-├── services/          # Logique metier
-├── hooks/             # Hooks custom
-└── lib/               # Utilitaires
+src/features/auth/
+  ├── components/     # UI spécifique auth
+  ├── hooks/          # useAuth, useLogin
+  ├── screens/        # LoginScreen, RegisterScreen
+  ├── services/       # authService.ts (logique)
+  └── types/          # User, AuthState
 
-// ❌ MAUVAIS (tout mélangé)
-pages/everything.tsx   # 2000 lignes avec UI + logique + API
+// ❌ MAUVAIS (tout mélangé dans un seul fichier)
+src/auth.ts         # 2000 lignes avec UI + logique + types
 ```
 
 ---
@@ -370,13 +405,13 @@ pages/everything.tsx   # 2000 lignes avec UI + logique + API
 
 **Concis et direct** :
 ```
-✅ "J'ai cree la page /login. Pour tester : va sur http://localhost:3000/login."
-❌ "J'ai terminé de créer avec succès la page /login qui permet..."
+✅ "J'ai cree LoginScreen.tsx. Pour tester : lance l'app et va sur l'ecran de login."
+❌ "J'ai terminé de créer avec succès le fichier LoginScreen.tsx qui permet..."
 ```
 
 **Pragmatique** :
 ```
-✅ "Il manque la config Firebase. Donne-moi tes cles, je cree le .env.local."
+✅ "Il manque la config Firebase. Donne-moi tes cles, je cree le .env."
 ❌ "Il semblerait qu'il y ait un problème avec la configuration Firebase..."
 ```
 
@@ -388,6 +423,6 @@ pages/everything.tsx   # 2000 lignes avec UI + logique + API
 
 ---
 
-**🎯 Ces règles sont ABSOLUES et s'appliquent à TOUS les projets Next.js**
+**🎯 Ces règles sont ABSOLUES et s'appliquent à TOUS les projets React Native/Expo**
 
 🤖 _Guide destiné à Claude Code - Ne jamais dévier de ces principes_

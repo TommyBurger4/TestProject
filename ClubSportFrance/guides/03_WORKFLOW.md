@@ -1,6 +1,6 @@
 # 🔄 WORKFLOW COMPLET POUR CLAUDE
 
-> **Guide étape par étape pour initialiser un nouveau projet Next.js**
+> **Guide étape par étape pour initialiser un nouveau projet React Native/Expo**
 
 **⚠️ IMPORTANT :** Ce workflow integre desormais l'**approche incrementale** pour les fichiers MD. Voir **16_INCREMENTAL_UPDATES.md** pour details complets.
 
@@ -8,7 +8,7 @@
 
 ## 📋 Ordre d'Exécution EXACT
 
-Quand un développeur dit **"Je veux créer un nouveau site web"**, voici l'ordre **EXACT** à suivre :
+Quand un développeur dit **"Je veux créer une nouvelle app"**, voici l'ordre **EXACT** à suivre :
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -67,16 +67,16 @@ Quand un développeur dit **"Je veux créer un nouveau site web"**, voici l'ordr
 ┌─────────────────────────────────────────────────┐
 │ ETAPE 7 : DEMANDE PERMISSION GLOBALE           │
 │ "Je vais maintenant initialiser le projet     │
-│  avec Next.js + TypeScript + Firebase.        │
+│  avec Expo + TypeScript + Firebase.           │
 │  Es-tu d'accord ?"                             │
 │ ATTENDRE CONFIRMATION                          │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
 │ ETAPE 8 : INIT PROJET (Section 3)             │
-│ npx create-next-app                            │
+│ npx create-expo-app                            │
 │ Installation dépendances                        │
-│ Creer fichier .env.local avec credentials     │
+│ Creer fichier .env avec credentials Firebase  │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
@@ -89,9 +89,9 @@ Quand un développeur dit **"Je veux créer un nouveau site web"**, voici l'ordr
                     ↓
 ┌─────────────────────────────────────────────────┐
 │ ETAPE 10 : VERIFICATION                        │
-│ npm run build                                   │
+│ npm test                                        │
 │ npm run lint                                    │
-│ npm run type-check (si configure)               │
+│ npm run type-check                              │
 └─────────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────────┐
@@ -109,7 +109,7 @@ Quand un développeur dit **"Je veux créer un nouveau site web"**, voici l'ordr
 ## 💬 Exemple de Dialogue EXACT
 
 ```
-DEV: "Je veux créer un nouveau site web"
+DEV: "Je veux créer une nouvelle app"
 
 CLAUDE: "Parfait ! Je vais te poser 16 questions pour comprendre ton projet.
 
@@ -119,7 +119,7 @@ CLAUDE: "Parfait ! Je vais te poser 16 questions pour comprendre ton projet.
 2. Description en une phrase ?
 3. Public cible (utilisateurs finaux) ?"
 
-DEV: "MonApp - Un site de partage de recettes - Grand public 25-55 ans"
+DEV: "MonApp - Une app de partage de recettes - Grand public 25-55 ans"
 
 CLAUDE:
 [CREE PROJECT.md avec nom, description, public cible]
@@ -154,8 +154,8 @@ CLAUDE (après toutes les questions ET mises a jour incrementales): "Merci ! Lai
 - Public cible : Grand public 25-55 ans
 
 🎯 PLATEFORMES CIBLEES
-- Desktop (prioritaire)
-- Mobile (responsive design)
+- iOS + Android (mobile)
+- Web (React Native Web) - Version complete
 
 ♿ ACCESSIBILITE
 - WCAG 2.1 niveau AA (conformite standard)
@@ -176,14 +176,13 @@ CLAUDE (après toutes les questions ET mises a jour incrementales): "Merci ! Lai
 - Partage sur réseaux sociaux
 
 🏗️ ARCHITECTURE TECHNIQUE PREVUE
-- Next.js 14+ (App Router) + TypeScript
+- Expo v54 + TypeScript
 - Firebase (Auth, Firestore, Storage, Analytics)
+- React Navigation v7
 - Zustand (state management)
-- Tailwind CSS (styling)
-- Google Maps JavaScript API (si geolocalisation)
-- Tests : Jest + Playwright E2E
-- Accessibilite : WCAG 2.1 AA
-- Deployment : Vercel
+- React Native Web (pour version web)
+- Tests : Jest + Detox E2E
+- Accessibilite : Props WCAG 2.1 AA
 
 Est-ce que tout est correct ?"
 
@@ -277,26 +276,20 @@ CLAUDE: "Excellent ! Voici le RECAPITULATIF COMPLET :
 === PROJET : MonApp ===
 
 📱 CONFIGURATION :
-- Next.js 14+ (App Router) + TypeScript
+- Expo v54 + TypeScript
 - Firebase (Auth + Firestore + Storage + Analytics)
-- Tailwind CSS
-- Stripe (abonnement premium)
+- React Navigation
+- RevenueCat (abonnement premium)
 
 🎨 ARCHITECTURE :
-app/
-├── (auth)/
-│   ├── login/
-│   ├── register/
-│   └── layout.tsx
-├── (main)/
-│   ├── recipes/
-│   ├── profile/
-│   ├── search/
-│   └── premium/
-├── components/
-├── services/
-├── hooks/
-└── lib/
+src/
+├── features/
+│   ├── auth/ (Email, Google, Apple)
+│   ├── recipes/ (CRUD recettes + photos)
+│   ├── rating/ (Système notation)
+│   ├── search/ (Recherche avancée)
+│   ├── social/ (Partage, followers)
+│   └── premium/ (Paywall RevenueCat)
 
 📄 FIRESTORE RULES : Générées automatiquement
 📄 DOCUMENTS LEGAUX : CGU + Politique confidentialité (SARL RecettesCo)
@@ -307,7 +300,7 @@ Je suis prêt à créer le projet. Veux-tu que je commence ?"
 DEV: "Oui"
 
 CLAUDE: "Je vais maintenant initialiser le projet complet :
-- Next.js + TypeScript
+- Expo + TypeScript
 - Firebase configuration
 - Architecture features
 - Documents légaux
@@ -331,11 +324,11 @@ CLAUDE: [Commence l'initialisation...]
 **BON :**
 ```
 "Je vais créer le système d'authentification complet :
- - app/login/page.tsx
- - app/register/page.tsx
- - services/authService.ts
- - components/auth/LoginForm.tsx
- - components/auth/GoogleSignInButton.tsx
+ - AuthContext.tsx
+ - authService.ts
+ - LoginScreen.tsx
+ - RegisterScreen.tsx
+ - AppleSignInButton.tsx
  Es-tu d'accord ?"
 ```
 
@@ -343,11 +336,11 @@ CLAUDE: [Commence l'initialisation...]
 
 **MAUVAIS :**
 ```
-"Je vais créer app/login/page.tsx, ok ?"
+"Je vais créer AuthContext.tsx, ok ?"
 [attendre]
 "Je vais créer authService.ts, ok ?"
 [attendre]
-"Je vais créer LoginForm.tsx, ok ?"
+"Je vais créer LoginScreen.tsx, ok ?"
 ...
 ```
 
@@ -378,7 +371,7 @@ const DETECTION_KEYWORDS = {
 
   photo: [
     'photo', 'image', 'camera', 'galerie',
-    'appareil photo', 'picture', 'upload'
+    'appareil photo', 'picture'
   ],
 
   calendar: [
@@ -430,7 +423,7 @@ Laisser le développeur valider AVANT de commencer à générer du code.
 Ne pas attendre la fin, le créer à l'étape 8 avec la TodoList complète.
 
 ### 5. Vérifier AVANT le premier commit
-Lancer npm run build, lint, type-check pour s'assurer que tout compile.
+Lancer les tests, lint, type-check pour s'assurer que tout compile.
 
 ---
 

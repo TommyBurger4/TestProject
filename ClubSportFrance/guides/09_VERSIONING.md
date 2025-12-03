@@ -1,6 +1,6 @@
 # 🔢 VERSIONING AUTOMATIQUE (SemVer)
 
-> **Guide complet du versioning semantique pour Next.js**
+> **Guide complet du versioning semantique pour React Native/Expo**
 
 ---
 
@@ -26,11 +26,12 @@ Exemples :
 
 ## 📝 Fichiers a Mettre a Jour
 
-Lors d'un changement de version, Claude doit mettre a jour **3 fichiers** :
+Lors d'un changement de version, Claude doit mettre a jour **4 fichiers** :
 
 1. **package.json** - `version`
-2. **PROJECT.md** - Section version + journal
-3. **CHANGELOG.md** (si existe) - Ajout entree
+2. **app.json** - `version` + `ios.buildNumber` + `android.versionCode`
+3. **PROJECT.md** - Section version + journal
+4. **CHANGELOG.md** (si existe) - Ajout entree
 
 ---
 
@@ -49,21 +50,23 @@ Lors d'un changement de version, Claude doit mettre a jour **3 fichiers** :
  * 2. CALCULER LA NOUVELLE VERSION :
  *    - Lire package.json pour version actuelle
  *    - Incrementer selon le type
+ *    - Incrementer buildNumber (iOS) et versionCode (Android)
  *
  * 3. PROPOSER LA MISE A JOUR :
  *    "Je vais mettre a jour la version :
- *     - Version actuelle : 1.2.3
- *     - Nouvelle version : 1.3.0
+ *     - Version actuelle : 1.2.3 (Build 45)
+ *     - Nouvelle version : 1.3.0 (Build 46)
  *
  *     Fichiers qui seront modifies :
  *     - package.json
+ *     - app.json
  *     - PROJECT.md
  *
  *     Voulez-vous continuer ?"
  *
  * 4. ATTENDRE CONFIRMATION
  *
- * 5. METTRE A JOUR LES 3 FICHIERS
+ * 5. METTRE A JOUR LES 4 FICHIERS
  *
  * 6. PROPOSER LE COMMIT :
  *    "Voulez-vous que je cree un commit pour cette mise a jour ?
@@ -119,7 +122,27 @@ const bumpVersion = (type) => {
   packageJson.version = newVersion;
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');
 
+  // 5. Mettre a jour app.json
+  const appJsonPath = path.join(__dirname, '../app.json');
+  const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
+
+  appJson.expo.version = newVersion;
+
+  // Incrementer buildNumber (iOS)
+  const currentBuildNumber = parseInt(appJson.expo.ios?.buildNumber || '1');
+  appJson.expo.ios = appJson.expo.ios || {};
+  appJson.expo.ios.buildNumber = String(currentBuildNumber + 1);
+
+  // Incrementer versionCode (Android)
+  const currentVersionCode = parseInt(appJson.expo.android?.versionCode || 1);
+  appJson.expo.android = appJson.expo.android || {};
+  appJson.expo.android.versionCode = currentVersionCode + 1;
+
+  fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2) + '\n');
+
   console.log(`Version bumped: ${currentVersion} → ${newVersion}`);
+  console.log(`iOS Build: ${currentBuildNumber} → ${currentBuildNumber + 1}`);
+  console.log(`Android versionCode: ${currentVersionCode} → ${currentVersionCode + 1}`);
 };
 
 // Execution
@@ -202,8 +225,8 @@ D'accord ?"
 
 **1. Deploiement imminent :**
 ```
-"On va deployer sur Vercel.
-Il faut mettre a jour la version avant le deploiement.
+"On va deployer sur les stores.
+Il faut mettre a jour la version avant le build.
 Version actuelle : 1.2.3
 Je propose : 1.3.0 (cumul de [X] features depuis derniere release)
 D'accord ?"
@@ -244,17 +267,18 @@ Veux-tu que je mette a jour la version ?"
 ```markdown
 # 📱 MonApp
 
-**Version actuelle :** 1.3.0
+**Version actuelle :** 1.3.0 (Build 46 / versionCode 46)
 **Derniere mise a jour :** 30/10/2025
 
 ## 📅 Historique des Versions
 
 ### Version 1.3.0 (30/10/2025) - MINOR
+**Build:** 46 (iOS) / versionCode: 46 (Android)
 
 **Nouvelles fonctionnalites :**
 - Ajout du mode sombre
 - Ajout du selecteur de langue (FR/EN/ES)
-- Notifications Web Push pour nouveaux messages
+- Notifications push pour nouveaux messages
 
 **Ameliorations :**
 - Performance de la liste des evenements
@@ -266,10 +290,11 @@ Veux-tu que je mette a jour la version ?"
 ---
 
 ### Version 1.2.3 (25/10/2025) - PATCH
+**Build:** 45 (iOS) / versionCode: 45 (Android)
 
 **Correctifs :**
 - Correction crash au login avec email long
-- Correction affichage avatar sur mobile
+- Correction affichage avatar sur iOS 15
 - Correction timezone pour calendrier
 ```
 

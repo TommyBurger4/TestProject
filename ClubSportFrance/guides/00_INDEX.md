@@ -20,7 +20,7 @@
 | 10 | [GIT_WORKFLOW](#10_git_workflowmd) | Dev | Commits, PR, branches |
 | 11 | [PROJECT_MD](#11_project_mdmd) | Dev | Memoire permanente |
 | 12 | [SECURITY](#12_securitymd) | Secu | Firestore Rules, legal |
-| 13 | [DEPLOYMENT](#13_deploymentmd) | Release | Vercel / Firebase Hosting |
+| 13 | [DEPLOYMENT](#13_deploymentmd) | Release | App Store / Play Store |
 | 14 | [AMBIGUITIES](#14_ambiguitiesmd) | Toujours | Demandes floues |
 | 15 | [ACCESSIBILITY](#15_accessibilitymd) | Dev | WCAG 2.1 AA/AAA |
 | 16 | [INCREMENTAL_UPDATES](#16_incremental_updatesmd) | Init | Mises a jour progressives MD |
@@ -41,7 +41,7 @@
 - Recapitulatif complet avant de commencer
 
 **Quand lire** :
-- ✅ Developpeur dit "Je veux creer un nouveau site web"
+- ✅ Developpeur dit "Je veux creer une nouvelle app"
 - ✅ APRES avoir lu 02_MASTER_RULES.md
 - ✅ AVANT de commencer a generer du code
 
@@ -50,7 +50,7 @@
 2. Description ?
 3. Type d'authentification ?
 4. Besoin de paiements ?
-5. Notifications ?
+5. Notifications push ?
 6. ... (16 questions au total)
 
 ---
@@ -62,7 +62,7 @@
 
 **Contenu** :
 - Conventions de code (francais SANS ACCENTS)
-- Firebase config pour Next.js
+- Firebase config WEB pour Expo (JAMAIS iOS/Android)
 - Conventions Git (Conventional Commits)
 - Regles de proactivite
 - Regles de permissions
@@ -74,7 +74,7 @@
 
 **Regles critiques** :
 - Commentaires en francais SANS ACCENTS (é→e, è→e, à→a)
-- Firebase config pour Next.js
+- Firebase WEB config pour Expo
 - Demander permission par FEATURE (groupe de fichiers), pas par fichier
 - Ne JAMAIS deviner quand ambigu
 
@@ -104,7 +104,7 @@
 4. Questions structure Firestore
 5. Recapitulatif complet
 6. Demande permission globale
-7. Init projet Next.js
+7. Init projet
 8. Generation code
 9. Verification
 10. Premier commit
@@ -117,14 +117,14 @@
 **Objectif** : Commandes d'installation et configuration technique
 
 **Contenu** :
-- Prerequis (Node, npm)
-- Commandes create-next-app
+- Prerequis (Node, npm, Expo CLI, EAS CLI)
+- Commandes create-expo-app
 - Installation dependances (obligatoires + conditionnelles)
-- Configuration Firebase
-- Configuration .env.local
-- Structure de dossiers Next.js
+- Configuration Firebase (WEB config)
+- Configuration .env
+- Structure de dossiers
 - Depannage
-- Configuration Vercel
+- Tests sur appareils physiques
 
 **Quand lire** :
 - ✅ Pendant l'etape 7 du workflow (Init projet)
@@ -132,42 +132,42 @@
 - ✅ En cas de probleme technique (section depannage)
 
 **Sections importantes** :
-- Configuration Firebase pour Next.js
-- Dependances conditionnelles selon onboarding
-- Depannage (build, modules, port)
+- Configuration Firebase (section 3.2 : WEB config)
+- Depandances conditionnelles selon onboarding
+- Depannage (Metro, build, pods, modules, port)
 
 ---
 
 ### 05_ARCHITECTURE.md
 
 **Phase** : Developpement
-**Objectif** : Architecture Next.js - comment structurer le code
+**Objectif** : Architecture par features - comment structurer le code
 
 **Contenu** :
 - Regle d'or : separation des responsabilites
-- Anatomie d'une feature (components/, hooks/, services/, types/)
+- Anatomie d'une feature (components/, hooks/, screens/, services/, types/)
 - Structure d'un service (patterns CRUD)
 - Structure d'un hook custom
-- Structure d'une page Next.js
+- Structure d'un screen
 - Composants UI reutilisables
-- State management (Zustand, Context)
+- State management (Zustand, Redux, Context)
 - Tests (unitaires, integration, E2E)
-- Performance (SSR, ISR, memoisation)
+- Performance (memoisation, lazy loading, optimisation listes)
 
 **Quand lire** :
 - ✅ Avant de creer une nouvelle feature
 - ✅ Pour comprendre ou placer le code
-- ✅ Pour reference des patterns de service/hook/page
+- ✅ Pour reference des patterns de service/hook/screen
 
 **Principes cles** :
 ```
-app/ (PAGES Next.js) = ROUTING + SSR
+FEATURES (src/features/) = LOGIQUE METIER + UI SPECIFIQUE
     ↓
-COMPONENTS (components/) = UI REUTILISABLE
+COMPONENTS (src/components/) = UI REUTILISABLE PURE
     ↓
-SERVICES (services/) = LOGIQUE GLOBALE (Firebase, API)
+SERVICES (src/services/) = LOGIQUE GLOBALE (Firebase, API)
     ↓
-HOOKS (hooks/) = LOGIQUE CUSTOM GENERIQUE
+HOOKS (src/hooks/) = LOGIQUE CUSTOM GENERIQUE
 ```
 
 ---
@@ -237,8 +237,8 @@ HOOKS (hooks/) = LOGIQUE CUSTOM GENERIQUE
 
 **Contenu** :
 - Philosophie : proposer, pas creer automatiquement
-- Configuration Jest pour Next.js
-- Exemples tests (utils, services, hooks, components, pages)
+- Configuration Jest
+- Exemples tests (utils, services, hooks, components)
 - Quand proposer des tests
 - Comment proposer des tests
 
@@ -267,7 +267,7 @@ HOOKS (hooks/) = LOGIQUE CUSTOM GENERIQUE
 - Script bump-version.js
 - Quand proposer bump version
 - Process de release
-- Format de version (package.json, PROJECT.md)
+- Format de version (package.json, app.json, iOS, Android)
 
 **Quand lire** :
 - ✅ Apres avoir termine une feature
@@ -308,7 +308,7 @@ HOOKS (hooks/) = LOGIQUE CUSTOM GENERIQUE
 type(scope): description courte
 
 feat(auth): add Google Sign-In
-fix(profile): correct avatar upload
+fix(profile): correct avatar upload on iOS
 docs(readme): update installation steps
 ```
 
@@ -337,13 +337,13 @@ docs(readme): update installation steps
 **TodoList Format** :
 ```markdown
 ### ⏳ EN COURS (1)
-- [⏳] [FEATURE] Notifications | Started: 2025-12-02
+- [⏳] [FEATURE] Notifications push | Started: 2025-10-29
 
 ### ⬜ A FAIRE (5)
-- [ ] [FEATURE] Mode offline | Added: 2025-12-01
+- [ ] [FEATURE] Mode hors ligne | Added: 2025-10-27
 
 ### ✅ TERMINE (3)
-- [x] [FEATURE] Chat groupe | Completed: 2025-12-02
+- [x] [FEATURE] Chat groupe | Completed: 2025-10-28
 ```
 
 ---
@@ -357,8 +357,8 @@ docs(readme): update installation steps
 - Regles Firestore - approche REACTIVE
 - Template firestore.rules complet
 - Validation cote client (Yup schemas)
-- Validation cote serveur (API Routes + Cloud Functions)
-- Gestion des secrets (.env.local)
+- Validation cote serveur (Cloud Functions)
+- Gestion des secrets (.env)
 - Generation AUTOMATIQUE documents legaux (CGU, Politique confidentialite)
 
 **Quand lire** :
@@ -384,27 +384,26 @@ Creation SIMULTANEE :
 ### 13_DEPLOYMENT.md
 
 **Phase** : Release
-**Objectif** : Deploiement Vercel et Firebase Hosting
+**Objectif** : Deploiement App Store et Play Store avec EAS
 
 **Contenu** :
-- Pre-requis (compte Vercel / Firebase)
-- Configuration vercel.json / firebase.json
+- Pre-requis (comptes Apple/Google)
+- Configuration eas.json
 - Workflow de deploiement (3 etapes)
-- Checklists pre-deploiement
+- Checklists pre-soumission (App Store + Play Store)
 - Automatisation avec Claude
-- Variables d'environnement production
-- Domaine custom
+- Assets visuels requis
 
 **Quand lire** :
 - ✅ Avant premier deploiement
 - ✅ Pour preparer une release production
-- ✅ Pour reference checklists deploiement
+- ✅ Pour reference checklists App Store/Play Store
 
 **Workflow** :
 ```bash
-1. Preparer release (tests, lint, build)
-2. Deploy preview (vercel --prod OU firebase deploy)
-3. Verifier production (domaine custom)
+1. Preparer release (tests, lint, build preview)
+2. Build production (eas build --profile production)
+3. Soumettre stores (eas submit --latest)
 ```
 
 ---
@@ -453,22 +452,22 @@ Est-ce correct ? Si non, peux-tu preciser :
 
 **Contenu** :
 - Principes WCAG 2.1 (Perceptible, Utilisable, Comprehensible, Robuste)
-- HTML semantique et attributs ARIA
+- Props accessibilite React Native
 - Contrastes couleurs conformes
-- Navigation clavier complete
-- Support lecteurs ecran
-- Tests accessibilite (axe-core)
+- Tailles tactiles minimales
+- Support VoiceOver / TalkBack
+- Tests accessibilite
 - Checklist conformite
 
 **Quand lire** :
 - ✅ Si WCAG 2.1 AA/AAA requis pendant onboarding
 - ✅ Avant de creer composants UI
-- ✅ Pour reference attributs ARIA
+- ✅ Pour reference props accessibilite
 - ✅ Pour tests accessibilite
 
 **Niveaux conformite** :
-- **AA (standard)** : Contraste 4.5:1 texte, 3:1 UI, navigation clavier
-- **AAA (maximal)** : Contraste 7:1 texte, 4.5:1 UI, navigation complete
+- **AA (standard)** : Contraste 4.5:1 texte, 3:1 UI, tailles tactiles 44x44
+- **AAA (maximal)** : Contraste 7:1 texte, 4.5:1 UI, navigation clavier complete
 
 ---
 
@@ -510,19 +509,19 @@ Fin → Generer TodoList complete + finaliser fichiers
 ### 17_FIREBASE_SETUP_GUIDE.md
 
 **Phase** : Initialisation
-**Objectif** : Guider l'utilisateur pour setup Firebase Console AVANT d'init Next.js
+**Objectif** : Guider l'utilisateur pour setup Firebase Console AVANT d'init Expo
 
 **Contenu** :
 - Verifier si projet Firebase existe
 - Guide complet creation projet Firebase
 - Activer services necessaires (Auth, Firestore, Storage)
-- Recuperer configuration (credentials)
+- Recuperer configuration WEB (7 credentials)
 - Validation automatique des credentials
 - Gestion des problemes frequents
 
 **Quand lire** :
 - ✅ Immediatement APRES les 16 questions onboarding
-- ✅ AVANT d'initialiser le projet Next.js
+- ✅ AVANT d'initialiser le projet Expo
 - ✅ Pour guider utilisateur etape par etape
 
 **Process** :
@@ -533,12 +532,12 @@ ETAPE 6 : Setup Firebase Console (17_FIREBASE_SETUP_GUIDE.md)
     ↓
 ETAPE 7 : Demande permission globale
     ↓
-ETAPE 8 : Init projet Next.js
+ETAPE 8 : Init projet Expo
 ```
 
 **Points cles** :
-- Recuperer config Firebase pour Next.js
-- Valider credentials avant de continuer
+- TOUJOURS config WEB (jamais iOS/Android pour Expo)
+- Valider les 7 credentials avant de continuer
 - Expliquer POURQUOI chaque service est active
 - Proposer mode TEST pour Firestore/Storage pendant dev
 - Meme region pour tous les services (europe-west1 recommande)
@@ -547,7 +546,7 @@ ETAPE 8 : Init projet Next.js
 
 ## 🎯 Guides par Cas d'Usage
 
-### Cas : "Cree un nouveau site web"
+### Cas : "Cree une nouvelle app"
 1. `02_MASTER_RULES.md` ⚠️
 2. `16_INCREMENTAL_UPDATES.md` (comprendre approche)
 3. `01_ONBOARDING.md` (16 questions)
@@ -567,9 +566,9 @@ ETAPE 8 : Init projet Next.js
 2. `08_TESTS.md` (proposer test regression)
 3. `11_PROJECT_MD.md` (journal)
 
-### Cas : "Deploie le site"
+### Cas : "Deploie l'app"
 1. `09_VERSIONING.md` (bump version)
-2. `13_DEPLOYMENT.md` (Vercel/Firebase Hosting)
+2. `13_DEPLOYMENT.md` (EAS, stores)
 
 ### Cas : "Demande floue"
 1. `14_AMBIGUITIES.md` ⚠️
@@ -623,6 +622,6 @@ ETAPE 8 : Init projet Next.js
 
 ---
 
-🤖 _Index destine a Claude Code - Vue d'ensemble complete du systeme de guides pour Next.js_
+🤖 _Index destine a Claude Code - Vue d'ensemble complete du systeme de guides_
 
-**Derniere mise a jour** : 02/12/2025
+**Derniere mise a jour** : 01/11/2025

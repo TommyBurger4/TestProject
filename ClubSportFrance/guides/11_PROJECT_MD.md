@@ -24,12 +24,12 @@ PROJECT.md sert de **memoire permanente** pour :
 **Progression globale : 35/120 (29%)**
 
 ### ⏳ EN COURS (1)
-- [⏳] [FEATURE] Notifications Web Push | Started: 2025-10-29
-  Description: Implementation complete du systeme de notifications navigateur
+- [⏳] [FEATURE] Notifications push | Started: 2025-10-29
+  Description: Implementation complete du systeme de notifications
 
 ### ⬜ A FAIRE (5)
-- [ ] [FEATURE] Mode hors ligne (PWA) | Added: 2025-10-27
-- [ ] [BUG] Crash au login sur Safari | Added: 2025-10-29
+- [ ] [FEATURE] Mode hors ligne | Added: 2025-10-27
+- [ ] [BUG] Crash au login sur iOS 17 | Added: 2025-10-29
 - [ ] [REFACTOR] Simplifier authService | Added: 2025-10-26
 - [ ] [TEST] Ajouter tests unitaires | Added: 2025-10-25
 - [ ] [DOCS] Mettre a jour README | Added: 2025-10-24
@@ -63,22 +63,24 @@ PROJECT.md sert de **memoire permanente** pour :
 ```markdown
 ## 📅 JOURNAL DE DEVELOPPEMENT
 
-### 30/10/2025 15:45 - Ajout animations Framer Motion
-- Installation framer-motion
-- Creation FadeIn, ScaleIn, SlideIn components
-- Integration animations dans HomePage et ProfilePage
-- Tests : OK sur desktop et mobile
+### 30/10/2025 15:45 - Ajout animations Reanimated
+- Installation react-native-reanimated
+- Creation FadeInView, ScaleView, SlideInView
+- Integration animations dans HomeScreen et ProfileScreen
+- Tests : OK sur iOS et Android
 
-### 30/10/2025 14:20 - Creation ProfilePage
+### 30/10/2025 14:20 - Creation ProfileScreen
 - Composant ProfileHeader avec avatar
 - ProfileStats (posts, followers, following)
 - Integration useProfile hook
-- Navigation vers /profile/edit
+- Navigation vers EditProfileScreen
 - Tests : OK
 
 ### 30/10/2025 10:15 - Mise a jour version 1.3.0
 - MINOR : Ajout mode sombre + selecteur langue
-- Mise a jour package.json, PROJECT.md
+- Build iOS : 45 → 46
+- versionCode Android : 45 → 46
+- Mise a jour package.json, app.json, PROJECT.md
 - Commit : chore: bump version to 1.3.0
 ```
 
@@ -101,11 +103,11 @@ PROJECT.md sert de **memoire permanente** pour :
 - **State Management :** Zustand pour global, Context API pour features specifiques
   *Raison :* Zustand plus simple que Redux, Context suffisant pour features isolees
 
-- **Routing :** Next.js App Router avec file-based routing
-  *Raison :* Standard Next.js, SSR/ISR integres, tres flexible
+- **Navigation :** React Navigation Stack + Bottom Tabs (4 tabs)
+  *Raison :* Standard React Native, tres flexible
 
-- **Styling :** Tailwind CSS + theme system centralise
-  *Raison :* Productivite elevee, design system facile a maintenir
+- **Styling :** StyleSheet natif + theme system centralise
+  *Raison :* Performance optimale, pas besoin de lib externe
 
 ### Firebase
 - **Firestore Structure :**
@@ -134,16 +136,16 @@ PROJECT.md sert de **memoire permanente** pour :
 ```markdown
 ## 🐛 PROBLEMES CONNUS
 
-### 1. Avatar upload lent sur connexions lentes
+### 1. Avatar upload lent sur iOS
 - **Statut :** En cours d'investigation
-- **Impact :** Utilisateurs attendent 5-10s
+- **Impact :** Utilisateurs iOS attendent 5-10s
 - **Piste :** Compression avant upload pas optimale
-- **TODO :** Tester sharp avec format JPEG optimise
+- **TODO :** Tester expo-image-manipulator avec format JPEG
 
-### 2. Notifications Web Push ne fonctionnent pas sur Safari
-- **Statut :** Limitation connue
-- **Impact :** Utilisateurs Safari sans notifications
-- **Solution :** Attendre support natif Safari ou utiliser alternative
+### 2. Notifications ne s'affichent pas en foreground sur Android
+- **Statut :** A investiguer
+- **Impact :** Moyen
+- **TODO :** Verifier config expo-notifications
 ```
 
 ---
@@ -160,13 +162,13 @@ PROJECT.md sert de **memoire permanente** pour :
 - [ ] Ajouter rate limiting sur Cloud Functions
 - [ ] Tester avec 1000+ posts pour verifier pagination
 - [ ] Generer Privacy Policy et Terms of Service
-- [ ] Configurer Sentry pour monitoring erreurs
-- [ ] Tests E2E avec Playwright
+- [ ] Configurer Crashlytics ou Sentry
+- [ ] Tests E2E avec Detox
 
 ### Dependances a surveiller
-- next : Maj majeure tous les 3-4 mois environ
+- expo : Maj majeure tous les 3 mois environ
 - firebase : Verifier breaking changes
-- tailwindcss : Stable mais verifier maj
+- react-native-reanimated : Beta v4 bientot
 
 ### Conventions equipe
 - Code review obligatoire (1 approbation minimum)
@@ -233,7 +235,7 @@ TODO termine : [x] [FEATURE] Chat groupe | Completed: 2025-10-28
 Verification dans JOURNAL :
 ✅ Trouve : "28/10/2025 14:20 - Implementation chat groupe
             - Creation chatService.ts
-            - Ajout page /chat
+            - Ajout ConversationsListScreen
             - Tests : OK"
 
 → Peut etre nettoye en toute securite
@@ -248,8 +250,9 @@ Verification dans JOURNAL :
 
 - **GitHub Repo :** https://github.com/username/project
 - **Firebase Console :** https://console.firebase.google.com/project/project-id
-- **Vercel Dashboard :** https://vercel.com/username/project
 - **Figma Design :** https://figma.com/file/...
+- **App Store Connect :** https://appstoreconnect.apple.com
+- **Google Play Console :** https://play.google.com/console
 ```
 
 ---

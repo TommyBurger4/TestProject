@@ -1,6 +1,6 @@
-# 🔒 SECURITE ET AUTHENTIFICATION (NEXT.JS)
+# 🔒 SECURITE ET AUTHENTIFICATION
 
-> **Guide complet de securite Next.js : Firestore Rules reactives, validation, secrets, documents legaux**
+> **Guide complet de securite : Firestore Rules reactives, validation, secrets, documents legaux**
 
 ---
 
@@ -333,60 +333,48 @@ REVENUECAT_API_KEY_ANDROID=your_android_key
 # NE JAMAIS COMMITER CE FICHIER !
 ```
 
-### Configuration .env.local (Next.js)
+### Configuration app.json
 
-**Next.js charge automatiquement les variables depuis `.env.local`**
-
-Pas besoin de configuration supplementaire, juste ajouter `NEXT_PUBLIC_` prefix pour variables accessibles cote client :
-
-```bash
-# .env.local
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-
-# NE JAMAIS COMMITER CE FICHIER !
+```json
+{
+  "expo": {
+    "extra": {
+      "firebase": {
+        "apiKey": "process.env.FIREBASE_API_KEY",
+        "authDomain": "process.env.FIREBASE_AUTH_DOMAIN",
+        "projectId": "process.env.FIREBASE_PROJECT_ID",
+        "storageBucket": "process.env.FIREBASE_STORAGE_BUCKET",
+        "messagingSenderId": "process.env.FIREBASE_MESSAGING_SENDER_ID",
+        "appId": "process.env.FIREBASE_APP_ID"
+      }
+    }
+  }
+}
 ```
-
-**Variables server-only** (sans `NEXT_PUBLIC_`) ne sont accessibles que dans :
-- API Routes
-- Server Components
-- Server Actions
 
 ### Acces aux Variables
 
 ```typescript
 // src/config/env.ts
-
-/**
- * Configuration des variables d'environnement Next.js
- *
- * Variables avec NEXT_PUBLIC_ sont accessibles cote client
- * Variables sans prefix sont server-only
- */
+import Constants from 'expo-constants';
 
 export const env = {
   firebase: {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    apiKey: Constants.expoConfig?.extra?.firebase?.apiKey,
+    authDomain: Constants.expoConfig?.extra?.firebase?.authDomain,
+    projectId: Constants.expoConfig?.extra?.firebase?.projectId,
+    storageBucket: Constants.expoConfig?.extra?.firebase?.storageBucket,
+    messagingSenderId: Constants.expoConfig?.extra?.firebase?.messagingSenderId,
+    appId: Constants.expoConfig?.extra?.firebase?.appId,
   },
 };
 
-// Validation au demarrage (Client Components uniquement)
-if (typeof window !== 'undefined') {
-  Object.entries(env.firebase).forEach(([key, value]) => {
-    if (!value) {
-      throw new Error(`Variable d'environnement manquante : ${key}`);
-    }
-  });
-}
+// Validation au demarrage
+Object.entries(env.firebase).forEach(([key, value]) => {
+  if (!value) {
+    throw new Error(`Variable d'environnement manquante : ${key}`);
+  }
+});
 ```
 
 ---

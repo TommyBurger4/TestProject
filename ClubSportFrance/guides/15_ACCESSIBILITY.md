@@ -1,163 +1,102 @@
-# ♿ ACCESSIBILITE WCAG 2.1 (WEB)
+# ♿ ACCESSIBILITE WCAG 2.1
 
-> **Guide complet d'accessibilite web selon les normes WCAG 2.1**
+> **Guide complet d'accessibilite mobile selon les normes WCAG 2.1**
 
 ---
 
 ## 🎯 Objectif
 
-Rendre le site web accessible a TOUS les utilisateurs, y compris ceux en situation de handicap (visuel, moteur, auditif, cognitif).
+Rendre l'application accessible a TOUS les utilisateurs, y compris ceux en situation de handicap (visuel, moteur, auditif, cognitif).
 
-**WCAG 2.1** (Web Content Accessibility Guidelines) niveau AA est le standard international pour l'accessibilite web.
+**WCAG 2.1** (Web Content Accessibility Guidelines) niveau AA est le standard international pour l'accessibilite.
 
 ---
 
-## 🌐 Accessibilite Web (Next.js + React)
+## 📱 Accessibilite React Native
 
 ### Principes Fondamentaux
 
-L'accessibilite web repose sur :
-1. **HTML semantique** (utiliser les bonnes balises)
-2. **ARIA attributes** (pour enrichir la semantique)
-3. **Contrastes conformes** (≥ 4.5:1 pour texte)
-4. **Navigation au clavier** (Tab, Enter, Escape, fleches)
-5. **Lecteurs d'ecran** (NVDA, JAWS, VoiceOver, TalkBack)
+React Native offre des props d'accessibilite compatibles iOS et Android :
 
-```tsx
-// ❌ MAUVAIS - Div non semantique
-<div onClick={handleLogin}>
-  <span>Se connecter</span>
-</div>
-
-// ✅ BON - Button semantique avec aria-label
-<button
-  type="button"
-  aria-label="Connexion a votre compte"
-  onClick={handleLogin}
-  className="btn-primary"
+```typescript
+<TouchableOpacity
+  accessible={true}
+  accessibilityLabel="Bouton de connexion"
+  accessibilityHint="Appuyez pour vous connecter a votre compte"
+  accessibilityRole="button"
+  onPress={handleLogin}
 >
-  Se connecter
-</button>
+  <Text>Se connecter</Text>
+</TouchableOpacity>
 ```
 
 ---
 
-## 🔤 HTML Semantique
+## 🔤 Props d'Accessibilite
 
-### Utiliser les Bonnes Balises
+### `accessible`
 
-**Toujours preferer HTML semantique aux divs generiques :**
+Active l'accessibilite pour un composant.
 
-```tsx
-// ❌ MAUVAIS
-<div className="title">Mon Titre</div>
-<div onClick={handleClick}>Cliquer ici</div>
-<div className="nav">
-  <div className="link">Accueil</div>
-</div>
-
-// ✅ BON
-<h1>Mon Titre</h1>
-<button type="button" onClick={handleClick}>Cliquer ici</button>
-<nav>
-  <Link href="/">Accueil</Link>
-</nav>
+```typescript
+<View accessible={true}>
+  <Text>Titre</Text>
+  <Text>Description</Text>
+</View>
+// Le lecteur d'ecran lira les deux textes ensemble
 ```
-
-**Balises semantiques principales :**
-- `<header>`, `<nav>`, `<main>`, `<footer>`, `<aside>`, `<section>`, `<article>`
-- `<h1>` a `<h6>` (hierarchie stricte)
-- `<button>`, `<a>`, `<input>`, `<label>`, `<form>`
-- `<ul>`, `<ol>`, `<li>` pour listes
-- `<table>`, `<thead>`, `<tbody>`, `<th>`, `<tr>`, `<td>` pour tableaux
 
 ---
 
-## 🎨 ARIA Attributes
-
-### Roles ARIA
-
-```tsx
-// Roles landmarks (navigation structure)
-<div role="banner">Header</div>         // Equivalent a <header>
-<div role="navigation">Menu</div>       // Equivalent a <nav>
-<div role="main">Contenu</div>          // Equivalent a <main>
-<div role="complementary">Aside</div>   // Equivalent a <aside>
-<div role="contentinfo">Footer</div>    // Equivalent a <footer>
-
-// Roles widgets
-<div role="button">Cliquer</div>       // Equivalent a <button>
-<div role="checkbox">Checkbox</div>    // Equivalent a <input type="checkbox">
-<div role="dialog">Modale</div>        // Modale / Dialog
-<div role="alert">Alerte</div>         // Message important
-
-// Roles document
-<div role="article">Article</div>      // Equivalent a <article>
-<div role="list">Liste</div>           // Equivalent a <ul> ou <ol>
-<div role="listitem">Item</div>        // Equivalent a <li>
-```
-
-**IMPORTANT** : Preferer HTML semantique. ARIA sert uniquement quand HTML ne suffit pas.
-
----
-
-### aria-label
+### `accessibilityLabel`
 
 Texte lu par le lecteur d'ecran (remplace le contenu visuel).
 
-```tsx
-// ❌ MAUVAIS - Icone sans label
-<button onClick={handleClose}>
-  <XIcon />
-</button>
+```typescript
+// ❌ MAUVAIS
+<TouchableOpacity>
+  <Image source={closeIcon} />
+</TouchableOpacity>
 
-// ✅ BON - Icone avec aria-label
-<button onClick={handleClose} aria-label="Fermer">
-  <XIcon />
-</button>
-
-// ✅ ENCORE MIEUX - aria-labelledby pour reutiliser texte existant
-<button onClick={handleClose} aria-labelledby="close-text">
-  <XIcon />
-  <span id="close-text" className="sr-only">Fermer</span>
-</button>
+// ✅ BON
+<TouchableOpacity
+  accessibilityLabel="Fermer"
+>
+  <Image source={closeIcon} />
+</TouchableOpacity>
 ```
 
 **Regles** :
 - Court et descriptif
 - En francais
-- Pas de "bouton" dans le label (role le dit deja)
-- Eviter si le texte est deja visible
+- Pas de "bouton" dans le label (accessibilityRole le dit deja)
 
 ---
 
-### aria-describedby
+### `accessibilityHint`
 
-Information supplementaire sur l'element (equivalent a accessibilityHint).
+Information supplementaire sur ce qui va se passer.
 
-```tsx
-<button
-  type="submit"
-  aria-label="Envoyer le message"
-  aria-describedby="send-hint"
+```typescript
+<TouchableOpacity
+  accessibilityLabel="Envoyer le message"
+  accessibilityHint="Votre message sera envoye a tous les participants"
+  accessibilityRole="button"
 >
-  Envoyer
-</button>
-<span id="send-hint" className="sr-only">
-  Votre message sera envoye a tous les participants du groupe
-</span>
+  <Text>Envoyer</Text>
+</TouchableOpacity>
 ```
 
 **Quand utiliser** :
 - Action non evidente
 - Consequence importante
-- Instructions complementaires
+- Navigation vers autre ecran
 
 ---
 
-### aria-live (Annonces Dynamiques)
+### `accessibilityRole`
 
-Annoncer les changements dynamiques aux lecteurs d'ecran.
+Type semantique du composant.
 
 **Roles disponibles** :
 

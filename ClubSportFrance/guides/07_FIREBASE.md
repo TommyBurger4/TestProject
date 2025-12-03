@@ -1,47 +1,6 @@
-# 🔥 FIREBASE - FIRESTORE (NEXT.JS)
+# 🔥 FIREBASE - FIRESTORE
 
-> **Guide complet pour Firebase Firestore avec Next.js : structure, services CRUD, et regles de securite**
-
----
-
-## 🌐 Firebase Web SDK pour Next.js
-
-**IMPORTANT** : Next.js utilise le **Firebase Web SDK** (version 9+ modular).
-
-### Differences avec React Native
-- **Imports** : `firebase/firestore` au lieu de `@react-native-firebase/firestore`
-- **API** : Identique (collection, doc, getDoc, getDocs, etc.)
-- **Regles Firestore** : Identiques (independant de la plateforme)
-- **Server vs Client** : Attention au SSR (voir section dediee)
-
-### Server Components vs Client Components
-
-```typescript
-/**
- * REGLE : Firestore UNIQUEMENT sur Client Components
- *
- * ❌ Server Component - NE PAS faire ca
- * export default async function ProfilePage() {
- *   const user = await getUser('123'); // ERREUR
- * }
- *
- * ✅ Client Component - Correct
- * 'use client';
- * export default function ProfilePage() {
- *   const [user, setUser] = useState(null);
- *   useEffect(() => {
- *     getUser('123').then(setUser);
- *   }, []);
- * }
- *
- * ✅ API Route - Alternative recommandee pour SSR
- * // app/api/users/[id]/route.ts
- * export async function GET(req, { params }) {
- *   const user = await getUser(params.id);
- *   return Response.json(user);
- * }
- */
-```
+> **Guide complet pour Firebase Firestore : structure, services CRUD, et regles de securite**
 
 ---
 
@@ -308,13 +267,10 @@ Claude : "Parfait ! Pour la collection `recipes`, definis exactement :
 
 ```typescript
 /**
- * Fichier: src/services/user/userService.ts
+ * Fichier: userService.ts
  *
  * Service CRUD pour la collection 'users'.
  * Gere toutes les operations Firestore sur les utilisateurs.
- *
- * IMPORTANT : Ce service utilise Firebase Web SDK (version 9+).
- * A utiliser dans Client Components ou API Routes uniquement.
  */
 
 import {
@@ -334,8 +290,8 @@ import {
   Timestamp,
   DocumentSnapshot,
 } from 'firebase/firestore';
-import { db } from '@/services/firebase/firebase';
-import { User, UserData } from '@/types/user.types';
+import { db } from '@services/firebase/firebase';
+import { User, UserData } from '../types/user.types';
 
 const COLLECTION_NAME = 'users';
 

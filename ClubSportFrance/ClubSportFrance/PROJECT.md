@@ -1,7 +1,7 @@
 # 📱 ClubSportFrance
 
 **Cree le :** 03/11/2025
-**Derniere mise a jour :** 03/11/2025
+**Derniere mise a jour :** 03/11/2025 12:15
 **Version actuelle :** 0.1.0 (Build 1 / versionCode 1)
 
 ---
@@ -202,35 +202,35 @@
 
 ## 📊 TODOLIST
 
-**Progression globale : 0/78 (0%)**
+**Progression globale : 12/78 (15%)**
 
 ### ⏳ EN COURS (0)
 _Aucune tache en cours_
 
-### ⬜ A FAIRE (78)
+### ⬜ A FAIRE (66)
 
-#### 🚀 PHASE 1 : INITIALISATION (0/12) ⬜
-- [ ] [FEATURE] Creer structure dossiers | Added: 03/11/2025
-- [ ] [FEATURE] Installer dependances Expo + TypeScript | Added: 03/11/2025
-- [ ] [FEATURE] Configurer Firebase (creer .env avec credentials) | Added: 03/11/2025
+#### 🚀 PHASE 1 : INITIALISATION (8/12) ⚡
+- [X] [FEATURE] Creer structure dossiers | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Installer dependances Expo + TypeScript | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Configurer Firebase (creer .env avec credentials) | Added: 03/11/2025 | Done: 03/11/2025
 - [ ] [CONFIG] Activer Firebase Storage | Added: 03/11/2025
 - [ ] [CONFIG] Configurer Google Sign-In (OAuth credentials) | Added: 03/11/2025
 - [ ] [CONFIG] Configurer Apple Sign-In (certificats) | Added: 03/11/2025
-- [ ] [FEATURE] Setup Git et premier commit | Added: 03/11/2025
-- [ ] [FEATURE] Creer theme (colors, typography, spacing, WCAG 2.1 AA) | Added: 03/11/2025
-- [ ] [FEATURE] Setup i18n (fr, en) | Added: 03/11/2025
-- [ ] [FEATURE] Configurer navigation | Added: 03/11/2025
-- [ ] [FEATURE] Creer composants UI de base (Button, Input, Card) | Added: 03/11/2025
+- [X] [FEATURE] Setup Git et premier commit | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer theme (colors, typography, spacing, WCAG 2.1 AA) | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Setup i18n (fr, en) | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Configurer navigation | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer composants UI de base (Button, Input, Card) | Added: 03/11/2025 | Done: 03/11/2025
 - [ ] [FEATURE] Setup tests (Jest config) | Added: 03/11/2025
 
-#### 🔐 PHASE 2 : AUTHENTIFICATION (0/7) ⬜
-- [ ] [FEATURE] Creer AuthContext | Added: 03/11/2025
-- [ ] [FEATURE] Creer authService.ts | Added: 03/11/2025
-- [ ] [FEATURE] Ecran Login | Added: 03/11/2025
-- [ ] [FEATURE] Ecran Register | Added: 03/11/2025
+#### 🔐 PHASE 2 : AUTHENTIFICATION (4/7) ⚡
+- [X] [FEATURE] Creer AuthContext | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer authService.ts | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Ecran Login | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Ecran Register | Added: 03/11/2025 | Done: 03/11/2025
 - [ ] [FEATURE] Google Sign-In integration | Added: 03/11/2025
 - [ ] [FEATURE] Apple Sign-In integration | Added: 03/11/2025
-- [ ] [FEATURE] Forgot Password / Reset Password | Added: 03/11/2025
+- [X] [FEATURE] Forgot Password / Reset Password | Added: 03/11/2025 | Done: 03/11/2025
 
 #### 👤 PHASE 3 : PROFILS UTILISATEURS (0/5) ⬜
 - [ ] [FEATURE] Collection users/ Firestore | Added: 03/11/2025
@@ -339,12 +339,81 @@ _Aucune tache en cours_
 - [ ] [DEPLOY] Deploy Web (Firebase Hosting) | Added: 03/11/2025
 - [ ] [DEPLOY] Soumission App Store + Play Store | Added: 03/11/2025
 
-### ✅ TERMINE (0)
-_Aucune tache terminee_
+### ✅ TERMINE (12)
+
+#### 🚀 PHASE 1 : INITIALISATION (8/12)
+- [X] [FEATURE] Creer structure dossiers | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Installer dependances Expo + TypeScript | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Configurer Firebase (creer .env avec credentials) | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Setup Git et premier commit | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer theme (colors, typography, spacing, WCAG 2.1 AA) | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Setup i18n (fr, en) | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Configurer navigation | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer composants UI de base (Button, Input, Card) | Added: 03/11/2025 | Done: 03/11/2025
+
+#### 🔐 PHASE 2 : AUTHENTIFICATION (4/7)
+- [X] [FEATURE] Creer AuthContext | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Creer authService.ts | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Ecran Login | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Ecran Register | Added: 03/11/2025 | Done: 03/11/2025
+- [X] [FEATURE] Forgot Password / Reset Password | Added: 03/11/2025 | Done: 03/11/2025
 
 ---
 
 ## 📅 JOURNAL DE DEVELOPPEMENT
+
+### 03/11/2025 12:15 - Phase 2 Authentification Email/Password complete
+- ✅ Creation authService.ts avec Firebase Auth :
+  - registerWithEmail, loginWithEmail, logout, sendPasswordReset
+  - Validation email et mot de passe
+  - Traduction erreurs Firebase en francais
+- ✅ Creation AuthContext avec onAuthStateChanged :
+  - Gestion etat utilisateur global
+  - Fonctions auth accessibles dans toute l'app
+  - Gestion loading et erreurs
+- ✅ Creation ecrans authentification complets :
+  - LoginScreen (email/password, lien inscription, mot de passe oublie)
+  - RegisterScreen (nom, email, password + confirmation)
+  - ForgotPasswordScreen (envoi email reinitialisation, message confirmation)
+  - Validation formulaires cote client
+  - Utilisation composants UI (Button, Input, Card)
+  - Accessibilite WCAG 2.1 AA respectee
+- 📊 Progression Phase 2 : 4/7 taches completees (57%)
+- 📊 Progression globale : 12/78 taches (15%)
+
+### 03/11/2025 12:00 - Composants UI de base et theme couleurs France
+- ✅ Creation ThemeContext (gestion theme clair/sombre avec AsyncStorage)
+- ✅ Creation composants UI accessibles WCAG 2.1 AA :
+  - Button.tsx (4 variants : primary, secondary, outline, text + loading state)
+  - Input.tsx (labels, erreurs, focus states, multiline support)
+  - Card.tsx (padding variants, elevation/shadow cross-platform)
+- ✅ Modification theme avec couleurs drapeau francais :
+  - Bleu France #0055A4 (primaire)
+  - Rouge France #EF4135 (secondaire)
+  - Tous contrastes conformes WCAG 2.1 AA
+- 📊 Progression Phase 1 : 8/12 taches completees (67%)
+
+### 03/11/2025 11:50 - Initialisation projet et resolution erreurs demarrage
+- ✅ Initialisation projet Expo avec TypeScript
+- ✅ Installation dependances completes (Navigation, Firebase, Maps, i18n, etc.)
+- ✅ Creation structure features/ complete (auth, clubs, search, chat, etc.)
+- ✅ Configuration Firebase (firebase.ts avec credentials .env)
+- ✅ Creation theme WCAG 2.1 AA (colors, typography, spacing)
+- ✅ Setup i18n (francais + anglais)
+- ✅ Generation Firestore Rules (5 collections)
+- ✅ Generation documents legaux (CGU.md, POLITIQUE_CONFIDENTIALITE.md)
+- ✅ Setup Git et premier commit vers GitHub
+- 🔧 Resolution erreurs demarrage npm start :
+  - Retrait expo-router du app.config.js (conflit React Navigation)
+  - Changement web.output de 'static' a 'single'
+  - Desinstallation react-native-reanimated (conflits dependances)
+  - Reorganisation assets/ vers assets/images/ et assets/sounds/
+  - Installation react-native-worklets-core avec --legacy-peer-deps
+  - Suppression babel.config.js cree par erreur
+- 📝 Creation guide TROUBLESHOOTING.md (8 erreurs documentees)
+- 📝 Creation guide universel 18_TROUBLESHOOTING.md pour futurs projets
+- ✅ App demarre correctement avec Expo
+- 📊 Progression Phase 1 : 7/12 taches completees (58%)
 
 ### 03/11/2025 - Onboarding et configuration Firebase
 - Collecte complete des 16 questions onboarding

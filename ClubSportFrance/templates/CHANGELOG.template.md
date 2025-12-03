@@ -17,12 +17,11 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 ### Ajouté
 - 🎉 Initialisation du projet [NOM_PROJET]
 - 📚 Documentation complète (README, CONTRIBUTING, SETUP, ARCHITECTURE)
-- 🔧 Configuration Next.js 14+ (App Router)
-- 🎨 Configuration Tailwind CSS avec système de thème ([THEME_CLAIR_SOMBRE])
+- 🔧 Configuration Expo v[VERSION_EXPO]
 - 🔥 Configuration Firebase (Auth, Firestore[STORAGE_SI_ACTIF][FUNCTIONS_SI_ACTIF])
-- 🌍 Internationalisation (next-intl) - Langues : [LISTE_LANGUES]
+- 🎨 Système de thème ([THEME_CLAIR_SOMBRE])
+- 🌍 Internationalisation (i18n) - Langues : [LISTE_LANGUES]
 - 🔐 Authentification ([METHODES_AUTH])
-- 📱 Design responsive (Desktop, Tablet, Mobile)
 [FONCTIONNALITES_INITIALES]
 
 ### Configuration
@@ -32,8 +31,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - ✅ Conventions de commits définies
 - ✅ TypeScript configuré (strict mode)
 - ✅ ESLint + Prettier configurés
-- ✅ Tests Jest + Playwright configurés
-- ✅ Déploiement Vercel automatisé
+- ✅ Tests Jest configurés
 
 ---
 
