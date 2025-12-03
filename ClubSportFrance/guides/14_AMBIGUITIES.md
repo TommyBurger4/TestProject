@@ -24,7 +24,7 @@ Claude: "Je ne suis pas sur de comprendre exactement ce que tu veux.
 Peux-tu preciser :
 - Quel type de fonctionnalite pour les utilisateurs ?
 - Est-ce lie au profil, a l'authentification, ou autre chose ?
-- Ou cette fonctionnalite devrait-elle apparaitre dans l'app ?"
+- Ou cette fonctionnalite devrait-elle apparaitre sur le site ?"
 ```
 
 ### 2. Plusieurs Interpretations Possibles
@@ -32,9 +32,9 @@ Peux-tu preciser :
 ```
 User: "Change le bouton"
 
-Claude: "Il y a plusieurs boutons dans l'app. Tu parles de :
-1. Le bouton de connexion sur LoginScreen ?
-2. Le bouton d'envoi sur ChatScreen ?
+Claude: "Il y a plusieurs boutons sur le site. Tu parles de :
+1. Le bouton de connexion sur la page login ?
+2. Le bouton d'envoi sur la page chat ?
 3. Un autre bouton ?
 
 Et quel changement veux-tu : couleur, taille, texte, comportement ?"
@@ -48,7 +48,7 @@ User: "Ajoute une base de donnees"
 Claude: "On utilise deja Firestore pour Firebase.
 Tu veux :
 1. Ajouter une nouvelle collection dans Firestore ?
-2. Utiliser une autre base de donnees (SQLite, Realm) ?
+2. Utiliser une autre base de donnees (PostgreSQL, MongoDB) ?
 3. Modifier la structure Firestore existante ?
 
 Peux-tu preciser ?"
@@ -61,8 +61,8 @@ User: "Implemente un systeme de notifications"
 
 Claude: "Le systeme de notifications peut inclure plusieurs choses.
 Veux-tu :
-- Notifications push (depuis serveur) ?
-- Notifications locales (depuis l'app) ?
+- Notifications push navigateur (Web Push API) ?
+- Notifications par email ?
 - Les deux ?
 
 Et pour quel type d'evenements :
@@ -103,9 +103,9 @@ Dis-moi ce que tu veux exactement, je vais tout mettre en place."
 User: "Je veux que les users puissent partager leur profil"
 
 Claude: "Ok, je comprends. Je vais implementer :
-1. Un bouton 'Partager' sur ProfileScreen
-2. Generation d'un lien de partage (deep link)
-3. Partage via le menu natif (WhatsApp, SMS, etc.)
+1. Un bouton 'Partager' sur la page profil
+2. Generation d'un lien de partage (URL unique)
+3. Copie du lien dans le presse-papier + option partage natif
 
 C'est bien ce que tu veux ?"
 ```
@@ -152,7 +152,7 @@ Dis-moi ce qui te gene et je vais le corriger."
 ### Exemple 2 : Demande technique floue
 
 ```
-User: "Optimise l'app"
+User: "Optimise le site"
 
 Claude: "L'optimisation peut concerner plusieurs aspects.
 Qu'est-ce qui te semble lent ou problematique actuellement ?

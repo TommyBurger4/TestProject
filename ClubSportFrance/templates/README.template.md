@@ -1,10 +1,11 @@
-# 📱 [NOM_PROJET]
+# 🌐 [NOM_PROJET]
 
 [DESCRIPTION_COURTE]
 
-[![React Native](https://img.shields.io/badge/React%20Native-[VERSION_RN]+-blue.svg)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-[VERSION_EXPO]+-black.svg)](https://expo.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-14+-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4+-38B2AC.svg)](https://tailwindcss.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-latest-orange.svg)](https://firebase.google.com/)
 
 ## 📋 Description
 
@@ -12,7 +13,7 @@
 
 **Public cible :** [PUBLIC_CIBLE]
 
-**Plateformes :** iOS, Android[WEB_SI_ACTIF]
+**Plateforme :** Site Web responsive (Desktop + Mobile)
 
 ## 🚀 Quick Start
 
@@ -25,11 +26,12 @@ cd [NOM_PROJET]
 npm install
 
 # Configurer les variables d'environnement
-cp .env.example .env
-# Modifier .env avec vos vraies clés Firebase
+cp .env.example .env.local
+# Modifier .env.local avec vos vraies clés Firebase
 
-# Lancer l'application
-npm start
+# Lancer le serveur de développement
+npm run dev
+# Ouvrir http://localhost:3000 dans votre navigateur
 ```
 
 Pour des instructions détaillées, consultez [docs/SETUP.md](docs/SETUP.md)
@@ -43,15 +45,20 @@ Pour des instructions détaillées, consultez [docs/SETUP.md](docs/SETUP.md)
 
 ## 🏗️ Technologies
 
-- **React Native + Expo v[VERSION_EXPO]** - Framework mobile cross-platform
+- **Next.js 14+ (App Router)** - Framework React avec SSR/SSG
 - **TypeScript** - Typage statique
+- **Tailwind CSS** - Framework CSS utility-first
 - **Firebase** - Backend (Auth, Firestore, Storage[CLOUD_FUNCTIONS_SI_ACTIF])
 - **Zustand** - State management global
-- **React Navigation v7** - Navigation
+- **Framer Motion** - Animations
 [I18N_SI_ACTIF]
-[REVENUECAT_SI_ACTIF]
 [MAPS_SI_ACTIF]
 [CHAT_SI_ACTIF]
+
+### Build & Deployment
+- **Vercel** - Hébergement et déploiement automatique
+- **GitHub Actions** - CI/CD
+- **Jest + Playwright** - Tests unitaires et E2E
 
 ## ✨ Fonctionnalités
 

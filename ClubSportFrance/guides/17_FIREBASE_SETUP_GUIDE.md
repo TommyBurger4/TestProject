@@ -1,6 +1,6 @@
-# 🔥 GUIDE SETUP FIREBASE CONSOLE
+# 🔥 GUIDE SETUP FIREBASE CONSOLE (NEXT.JS)
 
-**Quand utiliser ce guide :** Immediatement APRES les 16 questions d'onboarding, AVANT d'initialiser le projet Expo.
+**Quand utiliser ce guide :** Immediatement APRES les 16 questions d'onboarding, AVANT d'initialiser le projet Next.js.
 
 ---
 
@@ -9,7 +9,7 @@
 Guider l'utilisateur etape par etape pour :
 1. Creer un projet Firebase Console
 2. Activer les services necessaires selon les reponses onboarding
-3. Recuperer la configuration WEB (OBLIGATOIRE pour Expo)
+3. Recuperer la configuration WEB (OBLIGATOIRE pour Next.js)
 4. Collecter les 7 credentials Firebase
 
 ---
@@ -116,7 +116,7 @@ On va les activer un par un.
    - Clique sur "Apple"
    - Active Apple
    - Clique "Enregistrer"
-   - Note : Configuration supplementaire necessaire plus tard pour iOS
+   - Note : Configuration WEB suffit pour Next.js
 
 [SI ANONYMOUS]
    ✅ Anonymous :
@@ -235,7 +235,7 @@ Je les deploierai automatiquement plus tard lors du developpement.
 ```
 🔑 ETAPE 4 : Recuperer la Configuration WEB
 
-⚠️ TRES IMPORTANT : Pour Expo, tu DOIS utiliser la config WEB, PAS iOS/Android.
+⚠️ TRES IMPORTANT : Pour Next.js, tu DOIS utiliser la config WEB.
 
 Voici comment recuperer la config :
 
@@ -245,7 +245,7 @@ Voici comment recuperer la config :
 3. Descends jusqu'a la section "Vos applications" (ou "Your apps")
 
 4. Clique sur l'icone WEB </> (symbole HTML)
-   - NE clique PAS sur iOS ou Android !
+   - UNIQUEMENT l'icone WEB (</>) !
 
 5. Surnom de l'app : [NOM_APP] Web (ex: FitTracker Web)
 
@@ -395,17 +395,17 @@ Services actives :
 Credentials collectes : 7/7 ✅
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-On passe maintenant a l'initialisation du projet Expo.
+On passe maintenant a l'initialisation du projet Next.js.
 Es-tu pret pour que je commence ?
 ```
 
-**ATTENDRE CONFIRMATION finale avant d'initialiser Expo**
+**ATTENDRE CONFIRMATION finale avant d'initialiser Next.js**
 
 ---
 
 ## 🎯 Checklist Complete
 
-Avant de continuer vers l'init Expo, verifier :
+Avant de continuer vers l'init Next.js, verifier :
 
 - [ ] Projet Firebase cree
 - [ ] Authentication activee avec bonnes methodes
@@ -415,7 +415,7 @@ Avant de continuer vers l'init Expo, verifier :
 - [ ] Credentials valides
 - [ ] Utilisateur a confirme
 
-**Une fois TOUT valide** → Continuer vers ETAPE 7 du workflow (Init Expo)
+**Une fois TOUT valide** → Continuer vers ETAPE 7 du workflow (Init Next.js)
 
 ---
 
@@ -447,7 +447,7 @@ C'est normal si c'est un nouveau projet !
 
 1. Va dans Parametres projet (engrenage ⚙️)
 2. Descends jusqu'a "Vos applications"
-3. Tu verras 3 icones : iOS (Apple), Android (robot), Web (</>)
+3. Tu verras plusieurs icones dont Web (</>) - clique dessus
 4. Clique sur Web (</>)
 ```
 
@@ -456,7 +456,7 @@ C'est normal si c'est un nouveau projet !
 ```
 Pas de probleme ! Tu peux avoir plusieurs apps dans le meme projet.
 
-Pour Expo, ajoute AUSSI l'app Web :
+Pour Next.js, ajoute AUSSI l'app Web :
 1. Parametres projet > "Vos applications"
 2. En bas, clique "Ajouter une application"
 3. Choisis Web (</>)
@@ -537,12 +537,12 @@ Credentials collectes : 7/7 ✅
 
 Je vais creer le fichier .env automatiquement lors de l'initialisation du projet.
 
-On passe maintenant a l'initialisation du projet Expo.
+On passe maintenant a l'initialisation du projet Next.js.
 Es-tu pret pour que je commence ?"
 
 USER: "Oui"
 
-CLAUDE: [Continue vers ETAPE 7 : Init Expo]
+CLAUDE: [Continue vers ETAPE 7 : Init Next.js]
 ```
 
 ---
