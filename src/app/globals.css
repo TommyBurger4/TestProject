@@ -139,3 +139,50 @@ body {
 .user-marker::before {
   background: #3b82f6 !important;
 }
+
+/* === Styles pour les clusters de markers === */
+
+/* Conteneur du cluster */
+.custom-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Icone du cluster */
+.cluster-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border: 3px solid white;
+  transition: transform 0.2s ease;
+}
+
+.cluster-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Tailles et couleurs des clusters */
+.cluster-small {
+  background: #3b82f6;
+  font-size: 14px;
+}
+
+.cluster-medium {
+  background: #f59e0b;
+  font-size: 16px;
+  width: 50px;
+  height: 50px;
+}
+
+.cluster-large {
+  background: #ef4444;
+  font-size: 18px;
+  width: 60px;
+  height: 60px;
+}

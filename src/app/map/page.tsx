@@ -147,7 +147,14 @@ export default function MapPage() {
               <span className="inline-block w-5 h-5 rounded-full bg-blue-600 border-2 border-white shadow flex items-center justify-center text-xs">📍</span>
               <span>Votre position</span>
             </div>
+            <div className="flex items-center gap-3 text-sm text-gray-600">
+              <span className="inline-block w-6 h-6 rounded-full bg-blue-600 border-2 border-white shadow flex items-center justify-center text-xs font-bold text-white">12</span>
+              <span>Groupe de clubs</span>
+            </div>
           </div>
+          <p className="text-xs text-gray-500 mt-3 italic">
+            Zoomez pour voir les clubs individuels
+          </p>
         </div>
 
         {/* Stats rapides */}

@@ -13,6 +13,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -161,22 +162,40 @@ export const MapView: React.FC<MapViewProps> = ({
         {/* Marker position utilisateur + bouton recentrage */}
         <UserLocationMarker />
 
-        {/* Markers des clubs avec emojis */}
-        {clubs.map((club) => (
-          <Marker
-            key={club.id}
-            position={[club.lat, club.lng]}
-            icon={createEmojiIcon(club.sport)}
-          >
-            <Popup>
-              <div className="text-center">
-                <div className="text-3xl mb-2">{getSportEmoji(club.sport)}</div>
-                <strong className="text-lg">{club.name}</strong>
-                <p className="text-gray-600 text-sm mt-1">{club.sport}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {/* Markers des clubs avec clustering */}
+        <MarkerClusterGroup
+          chunkedLoading
+          showCoverageOnHover={false}
+          spiderfyOnMaxZoom={true}
+          iconCreateFunction={(cluster) => {
+            const count = cluster.getChildCount();
+            let size = 'small';
+            if (count >= 100) size = 'large';
+            else if (count >= 50) size = 'medium';
+
+            return L.divIcon({
+              html: `<div class="cluster-icon cluster-${size}"><span>${count}</span></div>`,
+              className: 'custom-cluster-icon',
+              iconSize: L.point(40, 40),
+            });
+          }}
+        >
+          {clubs.map((club) => (
+            <Marker
+              key={club.id}
+              position={[club.lat, club.lng]}
+              icon={createEmojiIcon(club.sport)}
+            >
+              <Popup>
+                <div className="text-center">
+                  <div className="text-3xl mb-2">{getSportEmoji(club.sport)}</div>
+                  <strong className="text-lg">{club.name}</strong>
+                  <p className="text-gray-600 text-sm mt-1">{club.sport}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );
