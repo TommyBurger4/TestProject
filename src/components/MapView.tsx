@@ -11,7 +11,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
 
 interface MapViewProps {
   center?: { lat: number; lng: number };
@@ -33,53 +32,65 @@ export const MapView: React.FC<MapViewProps> = ({
 
   // Charger Google Maps API
   useEffect(() => {
-    const initMap = async () => {
-      try {
-        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-        if (!apiKey) {
-          throw new Error('Google Maps API key manquante. Ajoutez NEXT_PUBLIC_GOOGLE_MAPS_API_KEY dans .env.local');
-        }
+    if (!apiKey) {
+      setError('Google Maps API key manquante. Ajoutez NEXT_PUBLIC_GOOGLE_MAPS_API_KEY dans .env.local');
+      setLoading(false);
+      return;
+    }
 
-        const loader = new Loader({
-          apiKey,
-          version: 'weekly',
-          libraries: ['places', 'geometry'],
+    // Charger le script Google Maps
+    const loadGoogleMaps = () => {
+      // Verifier si le script est deja charge
+      if (window.google && window.google.maps) {
+        initMap();
+        return;
+      }
+
+      // Creer le script
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        initMap();
+      };
+      script.onerror = () => {
+        setError('Impossible de charger Google Maps. Verifiez votre connexion et votre cle API.');
+        setLoading(false);
+      };
+
+      document.head.appendChild(script);
+    };
+
+    const initMap = () => {
+      if (mapRef.current && window.google) {
+        // Creer la carte
+        const map = new google.maps.Map(mapRef.current, {
+          center,
+          zoom,
+          mapTypeControl: true,
+          streetViewControl: false,
+          fullscreenControl: true,
+          zoomControl: true,
         });
 
-        await loader.load();
+        mapInstanceRef.current = map;
 
-        if (mapRef.current) {
-          // Creer la carte
-          const map = new google.maps.Map(mapRef.current, {
-            center,
-            zoom,
-            mapTypeControl: true,
-            streetViewControl: false,
-            fullscreenControl: true,
-            zoomControl: true,
-          });
-
-          mapInstanceRef.current = map;
-
-          // Callback quand la carte est prete
-          if (onMapLoad) {
-            onMapLoad(map);
-          }
-
-          setLoading(false);
-
-          // Demander geolocalisation
-          requestUserLocation(map);
+        // Callback quand la carte est prete
+        if (onMapLoad) {
+          onMapLoad(map);
         }
-      } catch (err) {
-        console.error('Erreur lors du chargement de Google Maps:', err);
-        setError('Impossible de charger la carte. Verifiez votre connexion.');
+
         setLoading(false);
+
+        // Demander geolocalisation
+        requestUserLocation(map);
       }
     };
 
-    initMap();
+    loadGoogleMaps();
   }, []);
 
   // Demander geolocalisation utilisateur
