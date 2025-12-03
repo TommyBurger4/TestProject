@@ -114,17 +114,17 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <span className="text-4xl">🏃‍♂️</span>
-            <h1 className="text-2xl font-bold text-gray-900">ClubSportFrance</h1>
+            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">ClubSportFrance</h1>
           </Link>
-          <h2 className="text-xl font-semibold text-gray-900 mt-4">Inscrire mon club</h2>
-          <p className="text-gray-600 mt-2">Creez un compte pour gerer votre club</p>
+          <h2 className="text-xl font-semibold text-gray-900 mt-4 whitespace-nowrap">Inscrire mon club</h2>
+          <p className="text-gray-600 mt-2 whitespace-normal">Creez un compte pour gerer votre club</p>
         </div>
 
         <Card>
           {/* Erreur */}
           {displayError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{displayError}</p>
+              <p className="text-sm text-red-600 whitespace-normal">{displayError}</p>
             </div>
           )}
 
@@ -219,9 +219,9 @@ export default function RegisterPage() {
 
           {/* Lien connexion */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 whitespace-normal">
               Vous avez deja un compte ?{' '}
-              <Link href="/login" className="text-primary font-semibold hover:underline">
+              <Link href="/login" className="text-primary font-semibold hover:underline whitespace-nowrap">
                 Se connecter
               </Link>
             </p>

@@ -60,10 +60,10 @@ export default function ForgotPasswordPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <span className="text-4xl">🏃‍♂️</span>
-            <h1 className="text-2xl font-bold text-gray-900">ClubSportFrance</h1>
+            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">ClubSportFrance</h1>
           </Link>
-          <h2 className="text-xl font-semibold text-gray-900 mt-4">Mot de passe oublie</h2>
-          <p className="text-gray-600 mt-2">
+          <h2 className="text-xl font-semibold text-gray-900 mt-4 whitespace-nowrap">Mot de passe oublie</h2>
+          <p className="text-gray-600 mt-2 whitespace-normal">
             Entrez votre email pour recevoir un lien de reinitialisation
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
           {/* Succes */}
           {success && (
             <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-600">
+              <p className="text-sm text-green-600 whitespace-normal">
                 ✓ Email envoye ! Verifiez votre boite de reception.
               </p>
             </div>
@@ -81,7 +81,7 @@ export default function ForgotPasswordPage() {
           {/* Erreur */}
           {displayError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{displayError}</p>
+              <p className="text-sm text-red-600 whitespace-normal">{displayError}</p>
             </div>
           )}
 

@@ -94,17 +94,17 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
             <span className="text-4xl">🏃‍♂️</span>
-            <h1 className="text-2xl font-bold text-gray-900">ClubSportFrance</h1>
+            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">ClubSportFrance</h1>
           </Link>
-          <h2 className="text-xl font-semibold text-gray-900 mt-4">Espace Club</h2>
-          <p className="text-gray-600 mt-2">Connectez-vous pour gerer votre club</p>
+          <h2 className="text-xl font-semibold text-gray-900 mt-4 whitespace-nowrap">Espace Club</h2>
+          <p className="text-gray-600 mt-2 whitespace-normal">Connectez-vous pour gerer votre club</p>
         </div>
 
         <Card>
           {/* Erreur */}
           {displayError && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{displayError}</p>
+              <p className="text-sm text-red-600 whitespace-normal">{displayError}</p>
             </div>
           )}
 
@@ -184,9 +184,9 @@ export default function LoginPage() {
 
           {/* Lien inscription */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 whitespace-normal">
               Pas encore de compte ?{' '}
-              <Link href="/register" className="text-primary font-semibold hover:underline">
+              <Link href="/register" className="text-primary font-semibold hover:underline whitespace-nowrap">
                 Inscrire mon club
               </Link>
             </p>

@@ -26,7 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   // Classes de base
-  const baseClasses = 'font-semibold rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'font-semibold rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap';
 
   // Classes de variant
   const variantClasses = {

@@ -39,7 +39,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className={fullWidth ? 'w-full' : ''}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-1 whitespace-normal">
           {label}
           {props.required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -48,11 +48,11 @@ export const Input: React.FC<InputProps> = ({
       <input className={allClasses} {...props} />
 
       {error && (
-        <p className="mt-1 text-sm text-red-500">{error}</p>
+        <p className="mt-1 text-sm text-red-500 whitespace-normal">{error}</p>
       )}
 
       {!error && helperText && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
+        <p className="mt-1 text-sm text-gray-500 whitespace-normal">{helperText}</p>
       )}
     </div>
   );
