@@ -3,9 +3,10 @@
  *
  * Fournit toutes les fonctions d'authentification :
  * - Inscription (Email/Password)
- * - Connexion (Email/Password)
+ * - Connexion (Email/Password + Google + Apple)
  * - Deconnexion
  * - Reinitialisation mot de passe
+ * - Gestion utilisateurs Firestore (avec role user/club)
  * - Gestion erreurs en francais
  */
 
@@ -17,8 +18,12 @@ import {
   User,
   AuthError,
   updateProfile,
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '../firebase/firebase';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
 
 // Types pour les resultats des operations
 export interface AuthResult {
@@ -27,26 +32,51 @@ export interface AuthResult {
   error?: string;
 }
 
+// Type pour les donnees utilisateur dans Firestore
+export interface UserData {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  role: 'user' | 'club';
+  createdAt: any;
+  updatedAt: any;
+}
+
 /**
  * Inscription avec email et mot de passe
  * @param email - Email de l'utilisateur
  * @param password - Mot de passe (min 6 caracteres)
- * @param displayName - Nom d'affichage optionnel
+ * @param displayName - Nom d'affichage
+ * @param role - Role utilisateur ('user' ou 'club')
  * @returns AuthResult avec user si succes, error si echec
  */
 export const registerWithEmail = async (
   email: string,
   password: string,
-  displayName?: string
+  displayName: string,
+  role: 'user' | 'club' = 'user'
 ): Promise<AuthResult> => {
   try {
+    // Creer compte Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Mettre a jour le nom d'affichage si fourni
-    if (displayName) {
-      await updateProfile(user, { displayName });
-    }
+    // Mettre a jour le nom d'affichage
+    await updateProfile(user, { displayName });
+
+    // Creer document utilisateur dans Firestore users/
+    const userData: UserData = {
+      uid: user.uid,
+      email: user.email!,
+      displayName,
+      photoURL: user.photoURL || undefined,
+      role,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    await setDoc(doc(db, 'users', user.uid), userData);
 
     return {
       success: true,
@@ -206,4 +236,104 @@ export const validatePassword = (password: string): { valid: boolean; error?: st
  */
 export const passwordsMatch = (password: string, confirmPassword: string): boolean => {
   return password === confirmPassword;
+};
+
+/**
+ * Connexion avec Google (OAuth)
+ * @param role - Role utilisateur ('user' ou 'club')
+ * @returns AuthResult avec user si succes, error si echec
+ */
+export const loginWithGoogle = async (role: 'user' | 'club' = 'user'): Promise<AuthResult> => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+
+    // Verifier si utilisateur existe deja dans Firestore
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+
+    if (!userDoc.exists()) {
+      // Creer document utilisateur si n'existe pas
+      const userData: UserData = {
+        uid: user.uid,
+        email: user.email!,
+        displayName: user.displayName || 'Utilisateur',
+        photoURL: user.photoURL || undefined,
+        role,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, 'users', user.uid), userData);
+    }
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: getFirebaseErrorMessage(error as AuthError),
+    };
+  }
+};
+
+/**
+ * Connexion avec Apple (OAuth)
+ * @param role - Role utilisateur ('user' ou 'club')
+ * @returns AuthResult avec user si succes, error si echec
+ */
+export const loginWithApple = async (role: 'user' | 'club' = 'user'): Promise<AuthResult> => {
+  try {
+    const provider = new OAuthProvider('apple.com');
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+
+    // Verifier si utilisateur existe deja dans Firestore
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+
+    if (!userDoc.exists()) {
+      // Creer document utilisateur si n'existe pas
+      const userData: UserData = {
+        uid: user.uid,
+        email: user.email!,
+        displayName: user.displayName || 'Utilisateur',
+        photoURL: user.photoURL || undefined,
+        role,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, 'users', user.uid), userData);
+    }
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: getFirebaseErrorMessage(error as AuthError),
+    };
+  }
+};
+
+/**
+ * Recuperer donnees utilisateur depuis Firestore
+ * @param uid - UID utilisateur
+ * @returns UserData ou null si non trouve
+ */
+export const getUserData = async (uid: string): Promise<UserData | null> => {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    if (userDoc.exists()) {
+      return userDoc.data() as UserData;
+    }
+    return null;
+  } catch (error) {
+    console.error('Erreur recuperation donnees utilisateur:', error);
+    return null;
+  }
 };
