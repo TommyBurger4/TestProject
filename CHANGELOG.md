@@ -11,7 +11,71 @@ et ce projet respecte [Semantic Versioning](https://semver.org/lang/fr/).
 
 ### En cours
 - Integration avec Firebase Firestore pour clubs reels (remplacer mock data)
-- Systeme d'authentification (login, register)
+- Configuration OAuth Firebase Console (Google Sign-In + Apple Sign-In)
+- Creation route /dashboard pour clubs connectes
+- Middleware protection routes privees
+
+---
+
+## [0.3.0] - 2025-12-03
+
+### 🔐 Authentification clubs complete
+
+#### Ajoute
+- **Systeme d'authentification complet** :
+  - authService.ts avec toutes les methodes Firebase Auth :
+    - registerWithEmail (creation compte + doc Firestore automatique)
+    - loginWithEmail (signInWithEmailAndPassword)
+    - loginWithGoogle (signInWithPopup + GoogleAuthProvider)
+    - loginWithApple (signInWithPopup + OAuthProvider 'apple.com')
+    - resetPassword (sendPasswordResetEmail)
+    - getUserData (recuperation userData depuis Firestore)
+  - Validation formulaires : isValidEmail, validatePassword, passwordsMatch
+  - Interface UserData (uid, email, displayName, photoURL, role, timestamps)
+- **AuthContext Provider** :
+  - Hook useAuth expose toutes les methodes auth
+  - State user (Firebase Auth) + userData (Firestore avec role)
+  - Auto-fetch userData sur auth state change (onAuthStateChanged)
+  - Gestion erreurs et loading states
+  - clearError pour reset erreurs
+- **Composants UI reutilisables** :
+  - Button : 4 variants (primary/secondary/danger/ghost), 3 tailles (sm/md/lg), loading state, fullWidth
+  - Input : label, error, helperText, fullWidth, support type password/email/text
+  - Card : container avec padding et shadow
+- **Pages authentification** :
+  - /login : Connexion Email/Password + Google + Apple, lien vers /register et /forgot-password
+  - /register : Inscription club (clubName + email + password + confirm), role='club' FORCE
+  - /forgot-password : Reinitialisation mot de passe par email avec message succes
+  - Toutes les pages : min-w-[400px] pour eviter word-wrapping
+  - Header avec logo et titre "ClubSportFrance"
+  - Lien retour vers / (carte)
+- **Architecture decisionnelle IMPORTANTE** :
+  - **Seuls les clubs ont besoin de se connecter** (role='club' automatique)
+  - **Les utilisateurs reguliers acceent a TOUT sans authentification** (carte, recherche, detail clubs)
+  - Bouton navigation "Se connecter" renomme en "Espace Club" pour clarifier
+  - Redirection apres login/register : /dashboard (route a creer)
+
+#### Modifie
+- Navigation /map : "Se connecter" → "Espace Club" (clarification)
+- globals.css : min-w-[400px] sur containers auth pour fix word-wrapping
+
+#### Corrige
+- Word-wrapping : texte coupait a chaque mot (fix: min-w-[400px] sur containers)
+- Nettoyage repository : suppression dossiers dupliques ClubSportFrance/ et ClubSportFrance_backup_mobile/ (157 fichiers)
+- Suppression .DS_Store
+
+#### A completer
+- Configuration OAuth Firebase Console (Google + Apple credentials)
+- Middleware protection routes /dashboard/*
+- Creation route /dashboard (inexistante actuellement)
+- Redirection conditionnelle selon role user/club
+
+#### Technique
+- Firebase Auth v11.1.0 (createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider)
+- Firestore users/ collection (uid, email, displayName, photoURL, role, createdAt, updatedAt)
+- React Context API pour AuthContext
+- Tailwind CSS pour styling composants UI
+- Next.js App Router pages /login, /register, /forgot-password
 
 ---
 

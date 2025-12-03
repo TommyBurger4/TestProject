@@ -1,8 +1,8 @@
 # 🌐 ClubSportFrance (Site Web)
 
 **Cree le :** 02/12/2025
-**Derniere mise a jour :** 03/12/2025 10:30
-**Version actuelle :** 0.2.0
+**Derniere mise a jour :** 03/12/2025 12:00
+**Version actuelle :** 0.3.0
 
 ---
 
@@ -403,14 +403,14 @@ app/
 
 ## 📊 TODOLIST
 
-**Progression globale : 8/90 (9%)**
+**Progression globale : 14/90 (16%)**
 
 ### ⏳ EN COURS (0)
 _Aucune tache en cours_
 
-### ⬜ A FAIRE (82)
+### ⬜ A FAIRE (76)
 
-#### 🚀 PHASE 1 : INITIALISATION NEXT.JS (0/15) ⬜
+#### 🚀 PHASE 1 : INITIALISATION NEXT.JS (1/15) ⬜
 - [ ] [FEATURE] Initialiser projet Next.js 14+ avec TypeScript | Added: 02/12/2025
 - [ ] [FEATURE] Configurer Tailwind CSS + theme (colors, typography, WCAG 2.1 AA) | Added: 02/12/2025
 - [ ] [FEATURE] Installer dependances Firebase (auth, firestore, storage, analytics) | Added: 02/12/2025
@@ -418,7 +418,7 @@ _Aucune tache en cours_
 - [ ] [CONFIG] Configurer variables environnement (.env.local) | Added: 02/12/2025
 - [ ] [CONFIG] Configurer Google Maps JavaScript API | Added: 02/12/2025
 - [ ] [FEATURE] Creer layout principal (Header, Footer) | Added: 02/12/2025
-- [ ] [FEATURE] Creer composants UI de base (Button, Input, Card) avec Tailwind | Added: 02/12/2025
+- [X] [FEATURE] Creer composants UI de base (Button, Input, Card) avec Tailwind | Completed: 03/12/2025
 - [ ] [FEATURE] Setup i18n avec next-intl (fr, en) | Added: 02/12/2025
 - [ ] [FEATURE] Creer ThemeProvider (clair/sombre) | Added: 02/12/2025
 - [ ] [FEATURE] Setup Zustand pour state global | Added: 02/12/2025
@@ -427,14 +427,14 @@ _Aucune tache en cours_
 - [ ] [FEATURE] Setup tests (Jest + React Testing Library) | Added: 02/12/2025
 - [ ] [FEATURE] Configurer SEO (metadata, sitemap.xml, robots.txt) | Added: 02/12/2025
 
-#### 🔐 PHASE 2 : AUTHENTIFICATION (0/9) ⬜
-- [ ] [FEATURE] Creer authService.ts (Firebase Auth client) | Added: 02/12/2025
-- [ ] [FEATURE] Creer AuthContext avec hooks (useAuth) | Added: 02/12/2025
-- [ ] [FEATURE] Page Login (/login) | Added: 02/12/2025
-- [ ] [FEATURE] Page Register avec choix User/Club (/register) | Added: 02/12/2025
-- [ ] [FEATURE] Page Forgot Password (/forgot-password) | Added: 02/12/2025
-- [ ] [CONFIG] Configurer Google Sign-In (OAuth credentials) | Added: 02/12/2025
-- [ ] [CONFIG] Configurer Apple Sign-In (certificats) | Added: 02/12/2025
+#### 🔐 PHASE 2 : AUTHENTIFICATION CLUBS (5/9) ⬜
+- [X] [FEATURE] Creer authService.ts (Firebase Auth client Email/Password, Google, Apple) | Completed: 03/12/2025
+- [X] [FEATURE] Creer AuthContext avec hooks (useAuth) et userData Firestore | Completed: 03/12/2025
+- [X] [FEATURE] Page Login (/login) - Espace Club uniquement | Completed: 03/12/2025
+- [X] [FEATURE] Page Register (/register) - Inscription club (role='club' force) | Completed: 03/12/2025
+- [X] [FEATURE] Page Forgot Password (/forgot-password) | Completed: 03/12/2025
+- [ ] [CONFIG] Configurer Google Sign-In (OAuth credentials Firebase Console) | Added: 02/12/2025
+- [ ] [CONFIG] Configurer Apple Sign-In (certificats Firebase Console) | Added: 02/12/2025
 - [ ] [FEATURE] Middleware protection routes privees | Added: 02/12/2025
 - [ ] [FEATURE] Redirection conditionnelle selon role (user/club) | Added: 02/12/2025
 
@@ -563,7 +563,19 @@ _Aucune tache en cours_
 - [ ] [DEPLOY] Deployer Firestore Rules | Added: 02/12/2025
 - [ ] [DEPLOY] Deployer Storage Rules | Added: 02/12/2025
 
-### ✅ TERMINE (8)
+### ✅ TERMINE (14)
+
+**Phase 1 (1/15):**
+- [X] [FEATURE] Creer composants UI de base (Button, Input, Card) avec Tailwind | Completed: 03/12/2025
+
+**Phase 2 (5/9):**
+- [X] [FEATURE] Creer authService.ts (Firebase Auth Email/Password, Google, Apple) | Completed: 03/12/2025
+- [X] [FEATURE] Creer AuthContext avec hooks (useAuth) et userData Firestore | Completed: 03/12/2025
+- [X] [FEATURE] Page Login (/login) - Espace Club uniquement | Completed: 03/12/2025
+- [X] [FEATURE] Page Register (/register) - Inscription club (role='club' force) | Completed: 03/12/2025
+- [X] [FEATURE] Page Forgot Password (/forgot-password) | Completed: 03/12/2025
+
+**Phase 4 (7/8):**
 - [X] [FEATURE] Installer leaflet + react-leaflet + react-leaflet-cluster | Completed: 03/12/2025
 - [X] [FEATURE] Creer composant MapView (Leaflet OpenStreetMap) | Completed: 03/12/2025
 - [X] [FEATURE] Geolocalisation utilisateur integree | Completed: 03/12/2025
@@ -576,6 +588,40 @@ _Aucune tache en cours_
 ---
 
 ## 📅 JOURNAL DE DEVELOPPEMENT
+
+### 03/12/2025 12:00 - Authentification clubs complete (v0.3.0)
+- 🔐 **SYSTEME AUTHENTIFICATION CLUBS** : Systeme complet pour les comptes clubs
+- **Architecture decisionnelle** :
+  - **IMPORTANT** : Seuls les clubs ont besoin de se connecter (role='club' force)
+  - Les utilisateurs reguliers acceent a TOUT sans authentification (carte, recherche, detail clubs)
+  - Navigation map : Bouton "Se connecter" → "Espace Club" pour clarifier
+- **Services implementes** :
+  - authService.ts complet :
+    - Email/Password avec createUserWithEmailAndPassword
+    - Google Sign-In (signInWithPopup + GoogleAuthProvider)
+    - Apple Sign-In (signInWithPopup + OAuthProvider)
+    - Mot de passe oublie (sendPasswordResetEmail)
+    - Creation automatique doc Firestore users/ lors inscription
+    - getUserData pour recuperer userData depuis Firestore
+  - Validation : isValidEmail, validatePassword, passwordsMatch
+- **Context Auth** :
+  - AuthContext avec user (Firebase Auth) + userData (Firestore avec role)
+  - Hook useAuth expose toutes les methodes auth
+  - Auto-fetch userData sur auth state change
+- **Composants UI** :
+  - Button : variants (primary/secondary/danger/ghost), tailles, loading state, fullWidth
+  - Input : label, error, helperText, fullWidth
+  - Card : container reutilisable
+- **Pages authentification** :
+  - /login : Email/Password + Google + Apple, redirection /dashboard
+  - /register : Inscription club avec clubName + email + password + confirm, role='club' FORCE
+  - /forgot-password : Envoi email reinitialisation
+  - Fix word-wrapping : min-w-[400px] sur containers pour eviter retours ligne
+- **A completer** :
+  - Configuration OAuth dans Firebase Console (Google + Apple)
+  - Middleware protection routes /dashboard/*
+  - Creation route /dashboard (actuellement inexistante)
+- **Progression** : Phase 2 Authentification 5/9 taches (56%)
 
 ### 03/12/2025 10:30 - Implementation carte interactive Leaflet
 - 🗺️ **CARTE INTERACTIVE COMPLETE** : Page principale avec carte OpenStreetMap
