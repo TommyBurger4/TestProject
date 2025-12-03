@@ -93,6 +93,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Fix retours a la ligne automatiques */
+* {
+  word-wrap: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
 /* Styles pour les markers emoji Leaflet */
 .custom-emoji-marker {
   background: transparent !important;
